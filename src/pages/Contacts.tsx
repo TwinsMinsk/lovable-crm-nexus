@@ -77,8 +77,8 @@ export default function Contacts() {
                   {contact.phones && 
                    Array.isArray(contact.phones) && 
                    contact.phones.length > 0
-                    ? contact.phones.map((phone: Phone, i: number) => (
-                        <div key={i}>{phone.number}</div>
+                    ? contact.phones.map((phone, i) => (
+                        <div key={i}>{(phone as Phone).number}</div>
                       ))
                     : "-"}
                 </TableCell>
@@ -86,8 +86,8 @@ export default function Contacts() {
                   {contact.emails && 
                    Array.isArray(contact.emails) && 
                    contact.emails.length > 0
-                    ? contact.emails.map((email: Email, i: number) => (
-                        <div key={i}>{email.address}</div>
+                    ? contact.emails.map((email, i) => (
+                        <div key={i}>{(email as Email).address}</div>
                       ))
                     : "-"}
                 </TableCell>
