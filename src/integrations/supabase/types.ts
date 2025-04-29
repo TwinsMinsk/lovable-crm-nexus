@@ -13,6 +13,7 @@ export type Database = {
         Row: {
           created_at: string
           emails: Json | null
+          files: Json | null
           id: string
           name: string
           notes: string | null
@@ -23,6 +24,7 @@ export type Database = {
         Insert: {
           created_at?: string
           emails?: Json | null
+          files?: Json | null
           id?: string
           name: string
           notes?: string | null
@@ -33,6 +35,7 @@ export type Database = {
         Update: {
           created_at?: string
           emails?: Json | null
+          files?: Json | null
           id?: string
           name?: string
           notes?: string | null
@@ -87,6 +90,7 @@ export type Database = {
           amount: number
           client_id: string
           created_at: string
+          files: Json | null
           id: string
           items: Json | null
           notes: string | null
@@ -103,6 +107,7 @@ export type Database = {
           amount?: number
           client_id: string
           created_at?: string
+          files?: Json | null
           id?: string
           items?: Json | null
           notes?: string | null
@@ -119,6 +124,7 @@ export type Database = {
           amount?: number
           client_id?: string
           created_at?: string
+          files?: Json | null
           id?: string
           items?: Json | null
           notes?: string | null
