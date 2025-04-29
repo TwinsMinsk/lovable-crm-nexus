@@ -9,6 +9,10 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Login from "@/pages/Login";
 import Signup from "@/pages/Signup";
 import Dashboard from "@/pages/Dashboard";
+import Leads from "@/pages/Leads";
+import Contacts from "@/pages/Contacts";
+import Orders from "@/pages/Orders";
+import Tasks from "@/pages/Tasks";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,10 +32,10 @@ const App = () => (
             {/* Protected routes */}
             <Route element={<ProtectedRoute />}>
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/leads" element={<div className="p-4"><h1 className="text-3xl font-bold">Лиды</h1><p>Страница в разработке</p></div>} />
-              <Route path="/contacts" element={<div className="p-4"><h1 className="text-3xl font-bold">Контакты</h1><p>Страница в разработке</p></div>} />
-              <Route path="/orders" element={<div className="p-4"><h1 className="text-3xl font-bold">Заказы</h1><p>Страница в разработке</p></div>} />
-              <Route path="/tasks" element={<div className="p-4"><h1 className="text-3xl font-bold">Задачи</h1><p>Страница в разработке</p></div>} />
+              <Route path="/leads" element={<Leads />} />
+              <Route path="/contacts" element={<Contacts />} />
+              <Route path="/orders" element={<Orders />} />
+              <Route path="/tasks" element={<Tasks />} />
               <Route path="/calendar" element={<div className="p-4"><h1 className="text-3xl font-bold">Календарь</h1><p>Страница в разработке</p></div>} />
               <Route path="/products" element={<div className="p-4"><h1 className="text-3xl font-bold">Товары</h1><p>Страница в разработке</p></div>} />
               <Route path="/partners" element={<div className="p-4"><h1 className="text-3xl font-bold">Партнеры</h1><p>Страница в разработке</p></div>} />

@@ -9,6 +9,39 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      contacts: {
+        Row: {
+          created_at: string
+          emails: Json | null
+          id: string
+          name: string
+          notes: string | null
+          phones: Json | null
+          responsible_user_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          emails?: Json | null
+          id?: string
+          name: string
+          notes?: string | null
+          phones?: Json | null
+          responsible_user_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          emails?: Json | null
+          id?: string
+          name?: string
+          notes?: string | null
+          phones?: Json | null
+          responsible_user_id?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       leads: {
         Row: {
           comment: string | null
@@ -47,6 +80,144 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      orders: {
+        Row: {
+          addresses: Json | null
+          amount: number
+          client_id: string
+          created_at: string
+          id: string
+          items: Json | null
+          notes: string | null
+          order_number: string
+          order_type: string
+          partner_id: string | null
+          payment_status: string | null
+          responsible_user_id: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          addresses?: Json | null
+          amount?: number
+          client_id: string
+          created_at?: string
+          id?: string
+          items?: Json | null
+          notes?: string | null
+          order_number: string
+          order_type: string
+          partner_id?: string | null
+          payment_status?: string | null
+          responsible_user_id?: string | null
+          status: string
+          user_id: string
+        }
+        Update: {
+          addresses?: Json | null
+          amount?: number
+          client_id?: string
+          created_at?: string
+          id?: string
+          items?: Json | null
+          notes?: string | null
+          order_number?: string
+          order_type?: string
+          partner_id?: string | null
+          payment_status?: string | null
+          responsible_user_id?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partners: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      tasks: {
+        Row: {
+          contact_id: string | null
+          created_at: string
+          description: string
+          due_date: string
+          id: string
+          order_id: string | null
+          responsible_user_id: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          contact_id?: string | null
+          created_at?: string
+          description: string
+          due_date: string
+          id?: string
+          order_id?: string | null
+          responsible_user_id?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          contact_id?: string | null
+          created_at?: string
+          description?: string
+          due_date?: string
+          id?: string
+          order_id?: string | null
+          responsible_user_id?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tasks_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tasks_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
