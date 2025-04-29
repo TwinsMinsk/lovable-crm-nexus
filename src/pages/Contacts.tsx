@@ -11,6 +11,24 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+// Define proper types for our contact data
+interface Phone {
+  number: string;
+}
+
+interface Email {
+  address: string;
+}
+
+interface Contact {
+  id: string;
+  name: string;
+  phones?: Phone[] | null;
+  emails?: Email[] | null;
+  responsible_user_id?: string | null;
+  notes?: string | null;
+}
+
 export default function Contacts() {
   const { data: contacts, isLoading, error } = useContacts();
 
@@ -49,19 +67,19 @@ export default function Contacts() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {contacts?.map((contact) => (
+            {contacts?.map((contact: Contact) => (
               <TableRow key={contact.id}>
                 <TableCell>{contact.name}</TableCell>
                 <TableCell>
-                  {contact.phones && contact.phones.length > 0
-                    ? contact.phones.map((phone: any, i: number) => (
+                  {Array.isArray(contact.phones) && contact.phones.length > 0
+                    ? contact.phones.map((phone: Phone, i: number) => (
                         <div key={i}>{phone.number}</div>
                       ))
                     : "-"}
                 </TableCell>
                 <TableCell>
-                  {contact.emails && contact.emails.length > 0
-                    ? contact.emails.map((email: any, i: number) => (
+                  {Array.isArray(contact.emails) && contact.emails.length > 0
+                    ? contact.emails.map((email: Email, i: number) => (
                         <div key={i}>{email.address}</div>
                       ))
                     : "-"}
