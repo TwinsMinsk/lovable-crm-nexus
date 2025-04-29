@@ -11,6 +11,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+// Import Json type from Supabase types to properly handle JSON data
+import { Json } from "@/integrations/supabase/types";
+
 // Define proper types for our contact data
 interface Phone {
   number: string;
@@ -23,8 +26,8 @@ interface Email {
 interface Contact {
   id: string;
   name: string;
-  phones?: Phone[] | null;
-  emails?: Email[] | null;
+  phones?: Json;
+  emails?: Json;
   responsible_user_id?: string | null;
   notes?: string | null;
 }
@@ -67,18 +70,22 @@ export default function Contacts() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {contacts?.map((contact: Contact) => (
+            {contacts?.map((contact) => (
               <TableRow key={contact.id}>
                 <TableCell>{contact.name}</TableCell>
                 <TableCell>
-                  {Array.isArray(contact.phones) && contact.phones.length > 0
+                  {contact.phones && 
+                   Array.isArray(contact.phones) && 
+                   contact.phones.length > 0
                     ? contact.phones.map((phone: Phone, i: number) => (
                         <div key={i}>{phone.number}</div>
                       ))
                     : "-"}
                 </TableCell>
                 <TableCell>
-                  {Array.isArray(contact.emails) && contact.emails.length > 0
+                  {contact.emails && 
+                   Array.isArray(contact.emails) && 
+                   contact.emails.length > 0
                     ? contact.emails.map((email: Email, i: number) => (
                         <div key={i}>{email.address}</div>
                       ))
