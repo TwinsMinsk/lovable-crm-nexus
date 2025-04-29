@@ -32,6 +32,16 @@ interface Contact {
   notes?: string | null;
 }
 
+// Type guard function to check if an object has the Phone structure
+function isPhone(obj: any): obj is Phone {
+  return typeof obj === 'object' && obj !== null && typeof obj.number === 'string';
+}
+
+// Type guard function to check if an object has the Email structure
+function isEmail(obj: any): obj is Email {
+  return typeof obj === 'object' && obj !== null && typeof obj.address === 'string';
+}
+
 export default function Contacts() {
   const { data: contacts, isLoading, error } = useContacts();
 
@@ -77,18 +87,24 @@ export default function Contacts() {
                   {contact.phones && 
                    Array.isArray(contact.phones) && 
                    contact.phones.length > 0
-                    ? contact.phones.map((phone, i) => (
-                        <div key={i}>{(phone as Phone).number}</div>
-                      ))
+                    ? contact.phones.map((phone, i) => {
+                        if (isPhone(phone)) {
+                          return <div key={i}>{phone.number}</div>;
+                        }
+                        return null;
+                      })
                     : "-"}
                 </TableCell>
                 <TableCell>
                   {contact.emails && 
                    Array.isArray(contact.emails) && 
                    contact.emails.length > 0
-                    ? contact.emails.map((email, i) => (
-                        <div key={i}>{(email as Email).address}</div>
-                      ))
+                    ? contact.emails.map((email, i) => {
+                        if (isEmail(email)) {
+                          return <div key={i}>{email.address}</div>;
+                        }
+                        return null;
+                      })
                     : "-"}
                 </TableCell>
                 <TableCell>{contact.responsible_user_id || "-"}</TableCell>
