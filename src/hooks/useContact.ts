@@ -1,6 +1,18 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabaseClient";
+import { Json } from "@/integrations/supabase/types";
+
+export interface Contact {
+  id: string;
+  name: string;
+  phones: Json;
+  emails: Json;
+  responsible_user_id: string | null;
+  notes: string | null;
+  created_at: string;
+  user_id: string;
+}
 
 export const useContact = (id: string | undefined) => {
   return useQuery({
@@ -15,7 +27,7 @@ export const useContact = (id: string | undefined) => {
         .single();
 
       if (error) throw error;
-      return data;
+      return data as Contact;
     },
     enabled: !!id,
   });

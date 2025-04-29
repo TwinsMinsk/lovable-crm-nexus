@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useContact } from "@/hooks/useContact";
 import { useUpdateContact } from "@/hooks/useUpdateContact";
@@ -49,15 +49,27 @@ export default function ContactDetail() {
   });
   
   // Initialize form data when contact is loaded
-  useState(() => {
+  useEffect(() => {
     if (contact) {
-      const phones = Array.isArray(contact.phones) ? 
-        contact.phones.filter(isPhone) as Phone[] : 
-        [];
+      // Convert JSON phones to typed Phone array
+      const phones: Phone[] = [];
+      if (Array.isArray(contact.phones)) {
+        contact.phones.forEach(phone => {
+          if (isPhone(phone)) {
+            phones.push({ number: phone.number });
+          }
+        });
+      }
       
-      const emails = Array.isArray(contact.emails) ? 
-        contact.emails.filter(isEmail) as Email[] : 
-        [];
+      // Convert JSON emails to typed Email array
+      const emails: Email[] = [];
+      if (Array.isArray(contact.emails)) {
+        contact.emails.forEach(email => {
+          if (isEmail(email)) {
+            emails.push({ address: email.address });
+          }
+        });
+      }
       
       setFormData({
         name: contact.name || "",
@@ -67,7 +79,7 @@ export default function ContactDetail() {
         notes: contact.notes || ""
       });
     }
-  });
+  }, [contact]);
   
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({ ...prev, name: e.target.value }));
@@ -148,13 +160,25 @@ export default function ContactDetail() {
   
   const handleEdit = () => {
     if (contact) {
-      const phones = Array.isArray(contact.phones) ? 
-        contact.phones.filter(isPhone) as Phone[] : 
-        [];
+      // Convert JSON phones to typed Phone array
+      const phones: Phone[] = [];
+      if (Array.isArray(contact.phones)) {
+        contact.phones.forEach(phone => {
+          if (isPhone(phone)) {
+            phones.push({ number: phone.number });
+          }
+        });
+      }
       
-      const emails = Array.isArray(contact.emails) ? 
-        contact.emails.filter(isEmail) as Email[] : 
-        [];
+      // Convert JSON emails to typed Email array
+      const emails: Email[] = [];
+      if (Array.isArray(contact.emails)) {
+        contact.emails.forEach(email => {
+          if (isEmail(email)) {
+            emails.push({ address: email.address });
+          }
+        });
+      }
       
       setFormData({
         name: contact.name || "",
