@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
-import { pencil } from "lucide-react";
+import { Pencil } from "lucide-react";
 import { Json } from "@/integrations/supabase/types";
 
 // Define proper types for our contact data
@@ -51,8 +51,13 @@ export default function ContactDetail() {
   // Initialize form data when contact is loaded
   useState(() => {
     if (contact) {
-      const phones = Array.isArray(contact.phones) ? contact.phones.filter(isPhone) : [];
-      const emails = Array.isArray(contact.emails) ? contact.emails.filter(isEmail) : [];
+      const phones = Array.isArray(contact.phones) ? 
+        contact.phones.filter(isPhone) as Phone[] : 
+        [];
+      
+      const emails = Array.isArray(contact.emails) ? 
+        contact.emails.filter(isEmail) as Email[] : 
+        [];
       
       setFormData({
         name: contact.name || "",
@@ -143,8 +148,13 @@ export default function ContactDetail() {
   
   const handleEdit = () => {
     if (contact) {
-      const phones = Array.isArray(contact.phones) ? contact.phones.filter(isPhone) : [];
-      const emails = Array.isArray(contact.emails) ? contact.emails.filter(isEmail) : [];
+      const phones = Array.isArray(contact.phones) ? 
+        contact.phones.filter(isPhone) as Phone[] : 
+        [];
+      
+      const emails = Array.isArray(contact.emails) ? 
+        contact.emails.filter(isEmail) as Email[] : 
+        [];
       
       setFormData({
         name: contact.name || "",
@@ -188,7 +198,7 @@ export default function ContactDetail() {
                 onClick={handleEdit}
                 className="flex items-center gap-2"
               >
-                <pencil className="h-4 w-4" /> Редактировать
+                <Pencil className="h-4 w-4" /> Редактировать
               </Button>
             )}
           </div>

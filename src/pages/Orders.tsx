@@ -1,11 +1,10 @@
-
 import { useState } from "react";
 import { useOrders } from "@/hooks/useOrders";
 import { AddOrderDialog } from "@/components/orders/AddOrderDialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { eye } from "lucide-react";
+import { Eye } from "lucide-react";
 import { OrderCard } from "@/components/orders/OrderCard";
 import { useUpdateOrderStatus } from "@/hooks/useUpdateOrderStatus";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -139,7 +138,7 @@ export default function Orders() {
                         onClick={() => navigate(`/orders/${order.id}`)}
                         className="flex items-center gap-1"
                       >
-                        <eye className="h-4 w-4" /> 
+                        <Eye className="h-4 w-4" /> 
                         Просмотр
                       </Button>
                     </TableCell>

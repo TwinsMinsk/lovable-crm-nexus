@@ -4,7 +4,7 @@ import { AddTaskDialog } from "@/components/tasks/AddTaskDialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { eye } from "lucide-react";
+import { Eye } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -88,7 +88,7 @@ export default function Tasks() {
                     onClick={() => navigate(`/tasks/${task.id}`)}
                     className="flex items-center gap-1"
                   >
-                    <eye className="h-4 w-4" /> 
+                    <Eye className="h-4 w-4" /> 
                     Просмотр
                   </Button>
                 </TableCell>

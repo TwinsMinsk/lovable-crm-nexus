@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useOrder } from "@/hooks/useOrder";
@@ -11,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
-import { pencil } from "lucide-react";
+import { Pencil } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function OrderDetail() {
@@ -160,7 +159,7 @@ export default function OrderDetail() {
                 onClick={handleEdit}
                 className="flex items-center gap-2"
               >
-                <pencil className="h-4 w-4" /> Редактировать
+                <Pencil className="h-4 w-4" /> Редактировать
               </Button>
             )}
           </div>

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useLead } from "@/hooks/useLead";
@@ -10,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
-import { pencil, eye } from "lucide-react";
+import { Pencil, Eye } from "lucide-react";
 
 export default function LeadDetail() {
   const { id } = useParams<{ id: string }>();
@@ -113,7 +112,7 @@ export default function LeadDetail() {
                 onClick={handleEdit}
                 className="flex items-center gap-2"
               >
-                <pencil className="h-4 w-4" /> Редактировать
+                <Pencil className="h-4 w-4" /> Редактировать
               </Button>
             )}
           </div>

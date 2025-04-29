@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
@@ -14,7 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { pencil } from "lucide-react";
+import { Pencil } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function TaskDetail() {
@@ -128,7 +127,7 @@ export default function TaskDetail() {
                 onClick={handleEdit}
                 className="flex items-center gap-2"
               >
-                <pencil className="h-4 w-4" /> Редактировать
+                <Pencil className="h-4 w-4" /> Редактировать
               </Button>
             )}
           </div>
