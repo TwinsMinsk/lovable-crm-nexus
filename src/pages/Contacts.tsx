@@ -2,6 +2,9 @@
 import { useContacts } from "@/hooks/useContacts";
 import { AddContactDialog } from "@/components/contacts/AddContactDialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
+import { eye } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -44,6 +47,7 @@ function isEmail(obj: any): obj is Email {
 
 export default function Contacts() {
   const { data: contacts, isLoading, error } = useContacts();
+  const navigate = useNavigate();
 
   if (error) {
     return (
@@ -77,6 +81,7 @@ export default function Contacts() {
               <TableHead>Email</TableHead>
               <TableHead>Ответственный</TableHead>
               <TableHead>Заметки</TableHead>
+              <TableHead className="text-right">Действия</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -109,6 +114,17 @@ export default function Contacts() {
                 </TableCell>
                 <TableCell>{contact.responsible_user_id || "-"}</TableCell>
                 <TableCell>{contact.notes || "-"}</TableCell>
+                <TableCell className="text-right">
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={() => navigate(`/contacts/${contact.id}`)}
+                    className="flex items-center gap-1"
+                  >
+                    <eye className="h-4 w-4" /> 
+                    Просмотр
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

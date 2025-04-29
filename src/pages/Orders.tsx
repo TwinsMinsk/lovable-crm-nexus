@@ -3,6 +3,9 @@ import { useState } from "react";
 import { useOrders } from "@/hooks/useOrders";
 import { AddOrderDialog } from "@/components/orders/AddOrderDialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
+import { eye } from "lucide-react";
 import { OrderCard } from "@/components/orders/OrderCard";
 import { useUpdateOrderStatus } from "@/hooks/useUpdateOrderStatus";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -47,6 +50,7 @@ const workflows = {
 export default function Orders() {
   const { data: orders, isLoading, error } = useOrders();
   const { mutate: updateStatus } = useUpdateOrderStatus();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<string>("table");
   const [activeWorkflow, setActiveWorkflow] = useState<"manufacturing" | "readyMade">("manufacturing");
 
@@ -114,6 +118,7 @@ export default function Orders() {
                   <TableHead>Статус оплаты</TableHead>
                   <TableHead>Ответственный</TableHead>
                   <TableHead>Партнер</TableHead>
+                  <TableHead className="text-right">Действия</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -127,6 +132,17 @@ export default function Orders() {
                     <TableCell>{order.payment_status}</TableCell>
                     <TableCell>{order.responsible_user_id || "-"}</TableCell>
                     <TableCell>{order.partner?.name || "-"}</TableCell>
+                    <TableCell className="text-right">
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => navigate(`/orders/${order.id}`)}
+                        className="flex items-center gap-1"
+                      >
+                        <eye className="h-4 w-4" /> 
+                        Просмотр
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -173,11 +189,12 @@ export default function Orders() {
                       </CardHeader>
                       <CardContent className="overflow-y-auto max-h-[70vh]">
                         {getOrdersByStatus(status).map(order => (
-                          <OrderCard 
-                            key={order.id} 
-                            order={order} 
-                            statuses={workflows[activeWorkflow].statuses}
-                          />
+                          <div key={order.id} className="mb-2 last:mb-0" onClick={() => navigate(`/orders/${order.id}`)}>
+                            <OrderCard 
+                              order={order} 
+                              statuses={workflows[activeWorkflow].statuses}
+                            />
+                          </div>
                         ))}
                         {getOrdersByStatus(status).length === 0 && (
                           <div className="text-center text-muted-foreground text-xs p-4">

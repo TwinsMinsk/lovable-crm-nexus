@@ -8,22 +8,25 @@ export const useUpdateOrderStatus = () => {
   return useMutation({
     mutationFn: async ({ 
       orderId, 
-      newStatus 
+      newStatus,
+      extraData = {} 
     }: { 
       orderId: string; 
-      newStatus: string 
+      newStatus: string;
+      extraData?: Record<string, any>;
     }) => {
       const { data, error } = await supabase
         .from("orders")
-        .update({ status: newStatus })
+        .update({ status: newStatus, ...extraData })
         .eq("id", orderId)
         .select();
 
       if (error) throw error;
       return data;
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["orders"] });
+      queryClient.invalidateQueries({ queryKey: ["order", variables.orderId] });
     },
   });
 };

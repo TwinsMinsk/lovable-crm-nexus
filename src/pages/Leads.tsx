@@ -2,6 +2,9 @@
 import { useLeads } from "@/hooks/useLeads";
 import { AddLeadDialog } from "@/components/leads/AddLeadDialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
+import { eye } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -13,6 +16,7 @@ import {
 
 export default function Leads() {
   const { data: leads, isLoading, error } = useLeads();
+  const navigate = useNavigate();
 
   if (error) {
     return (
@@ -47,6 +51,7 @@ export default function Leads() {
               <TableHead>Источник</TableHead>
               <TableHead>Статус</TableHead>
               <TableHead>Ответственный</TableHead>
+              <TableHead className="text-right">Действия</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -58,6 +63,17 @@ export default function Leads() {
                 <TableCell>{lead.source || "-"}</TableCell>
                 <TableCell>{lead.status}</TableCell>
                 <TableCell>{lead.responsible_user_id || "-"}</TableCell>
+                <TableCell className="text-right">
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={() => navigate(`/leads/${lead.id}`)}
+                    className="flex items-center gap-1"
+                  >
+                    <eye className="h-4 w-4" /> 
+                    Просмотр
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

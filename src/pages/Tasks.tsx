@@ -2,6 +2,9 @@
 import { useTasks } from "@/hooks/useTasks";
 import { AddTaskDialog } from "@/components/tasks/AddTaskDialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
+import { eye } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -16,6 +19,7 @@ import { Badge } from "@/components/ui/badge";
 
 export default function Tasks() {
   const { data: tasks, isLoading, error } = useTasks();
+  const navigate = useNavigate();
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -63,6 +67,7 @@ export default function Tasks() {
               <TableHead>Контакт</TableHead>
               <TableHead>Заказ</TableHead>
               <TableHead>Ответственный</TableHead>
+              <TableHead className="text-right">Действия</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -76,6 +81,17 @@ export default function Tasks() {
                 <TableCell>{task.contact?.name || "-"}</TableCell>
                 <TableCell>{task.order?.order_number || "-"}</TableCell>
                 <TableCell>{task.responsible_user_id || "-"}</TableCell>
+                <TableCell className="text-right">
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={() => navigate(`/tasks/${task.id}`)}
+                    className="flex items-center gap-1"
+                  >
+                    <eye className="h-4 w-4" /> 
+                    Просмотр
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
