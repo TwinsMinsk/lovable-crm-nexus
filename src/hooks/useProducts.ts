@@ -16,7 +16,19 @@ export function useProducts() {
         throw new Error(error.message);
       }
 
-      return data || [];
+      // Ensure the data matches the Product interface
+      const products = data?.map(item => ({
+        id: item.id,
+        created_at: item.created_at,
+        name: item.name,
+        description: item.description || null,
+        sku: item.sku || null,
+        price: item.price || 0,
+        image_url: item.image_url || null,
+        user_id: item.user_id
+      })) || [];
+
+      return products;
     }
   });
 }

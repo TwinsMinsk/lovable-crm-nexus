@@ -22,7 +22,19 @@ export function useProduct(id: string | undefined) {
         throw new Error(error.message);
       }
 
-      return data;
+      // Ensure the data matches the Product interface
+      const product: Product = {
+        id: data.id,
+        created_at: data.created_at,
+        name: data.name,
+        description: data.description || null,
+        sku: data.sku || null,
+        price: data.price || 0,
+        image_url: data.image_url || null,
+        user_id: data.user_id
+      };
+
+      return product;
     },
     enabled: !!id
   });

@@ -3,11 +3,11 @@ export interface Partner {
   id: string;
   created_at: string;
   name: string;
-  contact_person: string | null;
-  phone: string | null;
-  email: string | null;
-  specialization: string | null;
-  terms: string | null;
+  contact_person?: string | null;
+  phone?: string | null;
+  email?: string | null;
+  specialization?: string | null;
+  terms?: string | null;
   user_id: string;
 }
 

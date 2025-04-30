@@ -16,7 +16,20 @@ export function usePartners() {
         throw new Error(error.message);
       }
 
-      return data || [];
+      // Ensure the data matches the Partner interface
+      const partners = data?.map(item => ({
+        id: item.id,
+        created_at: item.created_at,
+        name: item.name,
+        user_id: item.user_id,
+        contact_person: item.contact_person || null,
+        phone: item.phone || null,
+        email: item.email || null,
+        specialization: item.specialization || null,
+        terms: item.terms || null
+      })) || [];
+
+      return partners;
     }
   });
 }

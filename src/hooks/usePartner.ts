@@ -22,7 +22,20 @@ export function usePartner(id: string | undefined) {
         throw new Error(error.message);
       }
 
-      return data;
+      // Ensure the data matches the Partner interface
+      const partner: Partner = {
+        id: data.id,
+        created_at: data.created_at,
+        name: data.name,
+        user_id: data.user_id,
+        contact_person: data.contact_person || null,
+        phone: data.phone || null,
+        email: data.email || null,
+        specialization: data.specialization || null,
+        terms: data.terms || null
+      };
+
+      return partner;
     },
     enabled: !!id
   });
