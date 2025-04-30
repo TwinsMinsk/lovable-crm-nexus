@@ -73,9 +73,16 @@ export default function OrderDetail() {
         notes: order.notes || ""
       });
       
-      // Initialize order items if they exist
-      if (order.items && Array.isArray(order.items) && order.items.length > 0) {
-        setOrderItems(order.items as OrderItem[]);
+      // Initialize order items if they exist with proper type casting
+      if (order.items && Array.isArray(order.items)) {
+        // Safely cast the JSON array to OrderItem[]
+        const typedItems = (order.items as any[]).map(item => ({
+          product_id: item.product_id || "",
+          product_name: item.product_name || "",
+          quantity: Number(item.quantity) || 0,
+          price: Number(item.price) || 0
+        }));
+        setOrderItems(typedItems);
       } else {
         setOrderItems([]);
       }
@@ -127,8 +134,15 @@ export default function OrderDetail() {
         notes: order.notes || ""
       });
       
+      // Also use proper type casting when setting items in edit mode
       if (order.items && Array.isArray(order.items)) {
-        setOrderItems(order.items as OrderItem[]);
+        const typedItems = (order.items as any[]).map(item => ({
+          product_id: item.product_id || "",
+          product_name: item.product_name || "",
+          quantity: Number(item.quantity) || 0,
+          price: Number(item.price) || 0
+        }));
+        setOrderItems(typedItems);
       }
       
       setIsEditing(true);
@@ -322,7 +336,12 @@ export default function OrderDetail() {
                     {/* Показываем список товаров */}
                     {order.items && Array.isArray(order.items) && order.items.length > 0 && (
                       <OrderItemList 
-                        items={order.items as OrderItem[]} 
+                        items={(order.items as any[]).map(item => ({
+                          product_id: item.product_id || "",
+                          product_name: item.product_name || "",
+                          quantity: Number(item.quantity) || 0,
+                          price: Number(item.price) || 0
+                        }))} 
                         onItemsChange={() => {}} 
                         readOnly={true} 
                       />
