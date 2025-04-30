@@ -17,6 +17,11 @@ import Orders from "@/pages/Orders";
 import OrderDetail from "@/pages/OrderDetail";
 import Tasks from "@/pages/Tasks";
 import TaskDetail from "@/pages/TaskDetail";
+import Products from "@/pages/Products";
+import ProductDetail from "@/pages/ProductDetail";
+import Partners from "@/pages/Partners";
+import PartnerDetail from "@/pages/PartnerDetail";
+import Calendar from "@/pages/Calendar";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -44,9 +49,11 @@ const App = () => (
               <Route path="/orders/:id" element={<OrderDetail />} />
               <Route path="/tasks" element={<Tasks />} />
               <Route path="/tasks/:id" element={<TaskDetail />} />
-              <Route path="/calendar" element={<div className="p-4"><h1 className="text-3xl font-bold">Календарь</h1><p>Страница в разработке</p></div>} />
-              <Route path="/products" element={<div className="p-4"><h1 className="text-3xl font-bold">Товары</h1><p>Страница в разработке</p></div>} />
-              <Route path="/partners" element={<div className="p-4"><h1 className="text-3xl font-bold">Партнеры</h1><p>Страница в разработке</p></div>} />
+              <Route path="/calendar" element={<Calendar />} />
+              <Route path="/products" element={<Products />} />
+              <Route path="/products/:id" element={<ProductDetail />} />
+              <Route path="/partners" element={<Partners />} />
+              <Route path="/partners/:id" element={<PartnerDetail />} />
               <Route path="/settings" element={<div className="p-4"><h1 className="text-3xl font-bold">Настройки</h1><p>Страница в разработке</p></div>} />
             </Route>
             
