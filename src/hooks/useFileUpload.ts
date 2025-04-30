@@ -33,13 +33,12 @@ export function useFileUpload(bucketName: string) {
       };
       
       // Upload file to Supabase Storage
+      // The upload method accepts 3 parameters: path, file, and options
       const { data, error } = await supabase.storage
         .from(bucketName)
         .upload(filePath, file, {
           cacheControl: '3600',
           upsert: false,
-        }, {
-          // Pass the upload progress event listener as an option
           onUploadProgress: uploadProgressListener
         });
       
