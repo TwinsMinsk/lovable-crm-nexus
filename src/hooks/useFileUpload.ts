@@ -26,24 +26,23 @@ export function useFileUpload(bucketName: string) {
       const fileName = `${uuidv4()}.${fileExt}`;
       const filePath = `${user.id}/${fileName}`;
       
-      // Set up event listener for upload progress
-      const uploadProgressListener = (event: ProgressEvent) => {
-        const percent = (event.loaded / event.total) * 100;
-        setProgress(percent);
-      };
+      // Since onUploadProgress is not available in FileOptions, we can't track progress directly
+      // We'll set it to indeterminate progress during upload
+      setProgress(0);
       
       // Upload file to Supabase Storage
-      // The upload method accepts 3 parameters: path, file, and options
       const { data, error } = await supabase.storage
         .from(bucketName)
         .upload(filePath, file, {
           cacheControl: '3600',
-          upsert: false,
-          onUploadProgress: uploadProgressListener
+          upsert: false
         });
       
       if (error) throw error;
       if (!data) throw new Error("Ошибка при загрузке файла");
+      
+      // Once upload is complete, set progress to 100%
+      setProgress(100);
       
       // Get the public URL for the uploaded file
       const { data: publicUrlData } = supabase.storage
