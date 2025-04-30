@@ -26,17 +26,21 @@ export function useFileUpload(bucketName: string) {
       const fileName = `${uuidv4()}.${fileExt}`;
       const filePath = `${user.id}/${fileName}`;
       
+      // Set up event listener for upload progress
+      const uploadProgressListener = (event: ProgressEvent) => {
+        const percent = (event.loaded / event.total) * 100;
+        setProgress(percent);
+      };
+      
       // Upload file to Supabase Storage
       const { data, error } = await supabase.storage
         .from(bucketName)
         .upload(filePath, file, {
           cacheControl: '3600',
           upsert: false,
-          onUploadProgress: (progress) => {
-            // Update progress state
-            const percent = (progress.loaded / progress.total) * 100;
-            setProgress(percent);
-          }
+        }, {
+          // Pass the upload progress event listener as an option
+          onUploadProgress: uploadProgressListener
         });
       
       if (error) throw error;
