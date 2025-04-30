@@ -48,18 +48,28 @@ export default function CalendarPage() {
   }, [tasks]);
   
   const getEventStyle = (event: CalendarEvent) => {
+    let backgroundColor = "#3b82f6"; // Default blue
+    
     switch (event.status) {
       case "Новая":
-        return { backgroundColor: "#e2e8f0" }; // Light gray
+        backgroundColor = "#e2e8f0"; // Light gray
+        break;
       case "В работе":
-        return { backgroundColor: "#7c3aed" }; // Purple
+        backgroundColor = "#7c3aed"; // Purple
+        break;
       case "Выполнена":
-        return { backgroundColor: "#10b981" }; // Green
+        backgroundColor = "#10b981"; // Green
+        break;
       case "Отменена":
-        return { backgroundColor: "#ef4444" }; // Red
-      default:
-        return { backgroundColor: "#3b82f6" }; // Blue
+        backgroundColor = "#ef4444"; // Red
+        break;
     }
+    
+    return {
+      style: {
+        backgroundColor
+      }
+    };
   };
   
   // Custom event component to display tasks with status
