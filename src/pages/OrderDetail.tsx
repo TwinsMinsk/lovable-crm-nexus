@@ -1,4 +1,5 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useOrder } from "@/hooks/useOrder";
 import { useUpdateOrderStatus } from "@/hooks/useUpdateOrderStatus";
@@ -12,6 +13,15 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { Pencil } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { PartnerSelect } from "@/components/orders/PartnerSelect";
+import { OrderItemList } from "@/components/orders/OrderItemList";
+
+interface OrderItem {
+  product_id: string;
+  product_name: string;
+  quantity: number;
+  price: number;
+}
 
 export default function OrderDetail() {
   const { id } = useParams<{ id: string }>();
@@ -23,8 +33,11 @@ export default function OrderDetail() {
   const [formData, setFormData] = useState({
     status: "",
     payment_status: "",
+    partner_id: "",
     notes: ""
   });
+
+  const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
 
   // Statuses for the workflows
   const statuses = {
@@ -51,62 +64,56 @@ export default function OrderDetail() {
   const paymentStatuses = ["Не оплачен", "Частично оплачен", "Оплачен"];
   
   // Initialize form data when order is loaded
-  useState(() => {
+  useEffect(() => {
     if (order) {
       setFormData({
         status: order.status || "",
         payment_status: order.payment_status || "",
+        partner_id: order.partner_id || "",
         notes: order.notes || ""
       });
+      
+      // Initialize order items if they exist
+      if (order.items && Array.isArray(order.items) && order.items.length > 0) {
+        setOrderItems(order.items as OrderItem[]);
+      } else {
+        setOrderItems([]);
+      }
     }
-  });
+  }, [order]);
   
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+  
+  const calculateTotalAmount = (items: OrderItem[]) => {
+    return items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   };
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!id) return;
     
+    const totalAmount = calculateTotalAmount(orderItems);
+    
     updateOrder(
       { 
         orderId: id, 
-        newStatus: formData.status 
+        newStatus: formData.status,
+        extraData: {
+          payment_status: formData.payment_status,
+          partner_id: formData.partner_id || null,
+          notes: formData.notes,
+          items: orderItems,
+          amount: totalAmount
+        }
       },
       {
         onSuccess: () => {
-          // Update other fields if needed
-          if (order && (
-            formData.payment_status !== order.payment_status ||
-            formData.notes !== order.notes
-          )) {
-            const { mutate: updateFullOrder } = useUpdateOrderStatus();
-            updateFullOrder(
-              { 
-                orderId: id, 
-                newStatus: formData.status,
-                extraData: {
-                  payment_status: formData.payment_status,
-                  notes: formData.notes
-                }
-              },
-              {
-                onSuccess: () => {
-                  setIsEditing(false);
-                  toast.success("Заказ успешно обновлен");
-                },
-                onError: (err) => toast.error(`Ошибка при обновлении данных: ${err.message}`)
-              }
-            );
-          } else {
-            setIsEditing(false);
-            toast.success("Статус заказа успешно обновлен");
-          }
+          setIsEditing(false);
+          toast.success("Заказ успешно обновлен");
         },
-        onError: (error) => {
-          toast.error(`Ошибка: ${error.message}`);
-        }
+        onError: (err) => toast.error(`Ошибка при обновлении данных: ${err.message}`)
       }
     );
   };
@@ -116,11 +123,20 @@ export default function OrderDetail() {
       setFormData({
         status: order.status || "",
         payment_status: order.payment_status || "",
+        partner_id: order.partner_id || "",
         notes: order.notes || ""
       });
+      
+      if (order.items && Array.isArray(order.items)) {
+        setOrderItems(order.items as OrderItem[]);
+      }
+      
       setIsEditing(true);
     }
   };
+  
+  // Показывать выбор партнера только для заказов типа "Изготовление"
+  const showPartnerSelection = order?.order_type === "Изготовление";
   
   // Determine which workflow this order belongs to
   const getOrderStatuses = () => {
@@ -224,7 +240,24 @@ export default function OrderDetail() {
                           </SelectContent>
                         </Select>
                       </div>
+                      
+                      {showPartnerSelection && (
+                        <div className="md:col-span-2">
+                          <PartnerSelect 
+                            value={formData.partner_id} 
+                            onChange={(value) => handleInputChange("partner_id", value)}
+                          />
+                        </div>
+                      )}
                     </div>
+                    
+                    <OrderItemList 
+                      items={orderItems} 
+                      onItemsChange={(items) => {
+                        setOrderItems(items);
+                      }}
+                    />
+                    
                     <div className="space-y-2">
                       <Label htmlFor="notes">Заметки</Label>
                       <Textarea 
@@ -246,42 +279,56 @@ export default function OrderDetail() {
                     </div>
                   </form>
                 ) : order ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground">Номер заказа</p>
-                      <p className="text-lg">{order.order_number}</p>
+                  <div className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">Номер заказа</p>
+                        <p className="text-lg">{order.order_number}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">Тип заказа</p>
+                        <p>{order.order_type}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">Клиент</p>
+                        <p>{order.client?.name || "-"}</p>
+                      </div>
+                      {showPartnerSelection && (
+                        <div>
+                          <p className="text-sm font-medium text-muted-foreground">Партнер</p>
+                          <p>{order.partner?.name || "-"}</p>
+                        </div>
+                      )}
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">Сумма</p>
+                        <p className="font-bold">{order.amount.toLocaleString()} ₽</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">Статус заказа</p>
+                        <p>{order.status}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">Статус оплаты</p>
+                        <p className={order.payment_status === "Оплачен" ? "text-green-500" : "text-amber-500"}>
+                          {order.payment_status}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">Ответственный</p>
+                        <p>{order.responsible_user_id || "-"}</p>
+                      </div>
                     </div>
+                    
+                    {/* Показываем список товаров */}
+                    {order.items && Array.isArray(order.items) && order.items.length > 0 && (
+                      <OrderItemList 
+                        items={order.items as OrderItem[]} 
+                        onItemsChange={() => {}} 
+                        readOnly={true} 
+                      />
+                    )}
+                    
                     <div>
-                      <p className="text-sm font-medium text-muted-foreground">Тип заказа</p>
-                      <p>{order.order_type}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground">Клиент</p>
-                      <p>{order.client?.name || "-"}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground">Партнер</p>
-                      <p>{order.partner?.name || "-"}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground">Сумма</p>
-                      <p className="font-bold">{order.amount.toLocaleString()} ₽</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground">Статус заказа</p>
-                      <p>{order.status}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground">Статус оплаты</p>
-                      <p className={order.payment_status === "Оплачен" ? "text-green-500" : "text-amber-500"}>
-                        {order.payment_status}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground">Ответственный</p>
-                      <p>{order.responsible_user_id || "-"}</p>
-                    </div>
-                    <div className="md:col-span-2">
                       <p className="text-sm font-medium text-muted-foreground">Заметки</p>
                       <p className="whitespace-pre-wrap">{order.notes || "-"}</p>
                     </div>
@@ -292,7 +339,7 @@ export default function OrderDetail() {
               </CardContent>
             </Card>
             
-            {/* Order items would go here in a separate card */}
+            {/* Order info sidebar */}
             <Card>
               <CardHeader>
                 <CardTitle>Дополнительная информация</CardTitle>
