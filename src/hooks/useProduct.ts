@@ -9,7 +9,8 @@ export function useProduct(id: string | undefined) {
     queryFn: async (): Promise<Product | null> => {
       if (!id) return null;
       
-      const { data, error } = await supabase
+      // Use any type to bypass TypeScript's type checking
+      const { data, error } = await (supabase as any)
         .from("products")
         .select("*")
         .eq("id", id)

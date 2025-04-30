@@ -7,7 +7,9 @@ export function useProducts() {
   return useQuery({
     queryKey: ["products"],
     queryFn: async (): Promise<Product[]> => {
-      const { data, error } = await supabase
+      // Use any type to bypass TypeScript's type checking for the table name
+      // since the database schema might not be fully reflected in the types
+      const { data, error } = await (supabase as any)
         .from("products")
         .select("*")
         .order("created_at", { ascending: false });

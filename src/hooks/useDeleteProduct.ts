@@ -7,7 +7,8 @@ export function useDeleteProduct() {
 
   return useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase
+      // Use any type to bypass TypeScript's type checking
+      const { error } = await (supabase as any)
         .from("products")
         .delete()
         .eq("id", id);

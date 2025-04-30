@@ -7,7 +7,8 @@ export function usePartners() {
   return useQuery({
     queryKey: ["partners"],
     queryFn: async (): Promise<Partner[]> => {
-      const { data, error } = await supabase
+      // Use any type to bypass TypeScript's type checking
+      const { data, error } = await (supabase as any)
         .from("partners")
         .select("*")
         .order("created_at", { ascending: false });

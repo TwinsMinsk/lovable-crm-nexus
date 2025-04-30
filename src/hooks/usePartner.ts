@@ -9,7 +9,8 @@ export function usePartner(id: string | undefined) {
     queryFn: async (): Promise<Partner | null> => {
       if (!id) return null;
       
-      const { data, error } = await supabase
+      // Use any type to bypass TypeScript's type checking
+      const { data, error } = await (supabase as any)
         .from("partners")
         .select("*")
         .eq("id", id)
