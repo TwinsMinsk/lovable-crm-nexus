@@ -1,6 +1,6 @@
 
 import React from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster as ToastPrimitive } from "@/components/ui/toaster";
 import { Toaster as SonnerToaster } from "@/components/ui/sonner";
@@ -25,8 +25,15 @@ import PartnerDetail from "@/pages/PartnerDetail";
 import Calendar from "@/pages/Calendar";
 import NotFound from "@/pages/NotFound";
 
-// Create a client
-const queryClient = new QueryClient();
+// Создаем клиент вне компонента App
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: false,
+    },
+  },
+});
 
 const App = () => {
   return (
@@ -35,40 +42,38 @@ const App = () => {
         <TooltipProvider>
           <ToastPrimitive />
           <SonnerToaster position="top-right" />
-          <BrowserRouter>
-            <AuthProvider>
-              <Routes>
-                {/* Public routes */}
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
-                
-                {/* Protected routes */}
-                <Route element={<ProtectedRoute />}>
-                  <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/leads" element={<Leads />} />
-                  <Route path="/leads/:id" element={<LeadDetail />} />
-                  <Route path="/contacts" element={<Contacts />} />
-                  <Route path="/contacts/:id" element={<ContactDetail />} />
-                  <Route path="/orders" element={<Orders />} />
-                  <Route path="/orders/:id" element={<OrderDetail />} />
-                  <Route path="/tasks" element={<Tasks />} />
-                  <Route path="/tasks/:id" element={<TaskDetail />} />
-                  <Route path="/calendar" element={<Calendar />} />
-                  <Route path="/products" element={<Products />} />
-                  <Route path="/products/:id" element={<ProductDetail />} />
-                  <Route path="/partners" element={<Partners />} />
-                  <Route path="/partners/:id" element={<PartnerDetail />} />
-                  <Route path="/settings" element={<div className="p-4"><h1 className="text-3xl font-bold">Настройки</h1><p>Страница в разработке</p></div>} />
-                </Route>
-                
-                {/* Default redirect to dashboard or login based on auth status */}
-                <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                
-                {/* Catch-all route */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </AuthProvider>
-          </BrowserRouter>
+          <AuthProvider>
+            <Routes>
+              {/* Public routes */}
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              
+              {/* Protected routes */}
+              <Route element={<ProtectedRoute />}>
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/leads" element={<Leads />} />
+                <Route path="/leads/:id" element={<LeadDetail />} />
+                <Route path="/contacts" element={<Contacts />} />
+                <Route path="/contacts/:id" element={<ContactDetail />} />
+                <Route path="/orders" element={<Orders />} />
+                <Route path="/orders/:id" element={<OrderDetail />} />
+                <Route path="/tasks" element={<Tasks />} />
+                <Route path="/tasks/:id" element={<TaskDetail />} />
+                <Route path="/calendar" element={<Calendar />} />
+                <Route path="/products" element={<Products />} />
+                <Route path="/products/:id" element={<ProductDetail />} />
+                <Route path="/partners" element={<Partners />} />
+                <Route path="/partners/:id" element={<PartnerDetail />} />
+                <Route path="/settings" element={<div className="p-4"><h1 className="text-3xl font-bold">Настройки</h1><p>Страница в разработке</p></div>} />
+              </Route>
+              
+              {/* Default redirect to dashboard or login based on auth status */}
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              
+              {/* Catch-all route */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </AuthProvider>
         </TooltipProvider>
       </QueryClientProvider>
     </React.StrictMode>
