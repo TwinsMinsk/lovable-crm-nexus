@@ -1,6 +1,8 @@
+
 import { Home, UserPlus, Users, ShoppingCart, ClipboardList, Calendar, Package, Building, Settings } from "lucide-react";
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarHeader, SidebarTrigger } from "@/components/ui/sidebar";
 import { Link } from "react-router-dom";
+import { NotificationBell } from "@/components/notifications/NotificationBell";
 
 // Menu items
 const menuItems = [{
@@ -45,7 +47,8 @@ export function AppSidebar() {
       <SidebarHeader className="py-4">
         <div className="flex items-center px-6">
           <h1 className="font-bold text-xl">Lugar &amp; Olivia CRM </h1>
-          <div className="ml-auto">
+          <div className="ml-auto flex items-center gap-2">
+            <NotificationBell />
             <SidebarTrigger />
           </div>
         </div>
