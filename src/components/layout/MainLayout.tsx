@@ -7,8 +7,13 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { NotificationBell } from "@/components/notifications/NotificationBell";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Outlet } from "react-router-dom";
+import { ReactNode } from "react";
 
-export function MainLayout() {
+interface MainLayoutProps {
+  children?: ReactNode;
+}
+
+export function MainLayout({ children }: MainLayoutProps) {
   const { signOut } = useAuth();
   const isMobile = useIsMobile();
 
@@ -31,7 +36,7 @@ export function MainLayout() {
             </div>
           </header>
           <main className="p-6 overflow-auto flex-1">
-            <Outlet />
+            {children || <Outlet />}
           </main>
         </div>
       </div>

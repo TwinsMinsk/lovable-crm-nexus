@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useContact, FileInfo } from "@/hooks/useContact";
 import { useUpdateContact } from "@/hooks/useUpdateContact";
-import { MainLayout } from "@/components/layout/MainLayout";
+import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -50,6 +50,7 @@ export default function ContactDetail() {
   const navigate = useNavigate();
   const { data: contact, isLoading, error } = useContact(id);
   const { mutate: updateContact } = useUpdateContact();
+  const { user } = useAuth();
   
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
@@ -241,244 +242,250 @@ export default function ContactDetail() {
     }
   };
   
+  const getResponsibleName = (userId?: string) => {
+    if (!userId) return "-";
+    
+    if (userId === user?.id) {
+      return user?.user_metadata?.full_name || "Вы";
+    }
+    
+    return "Пользователь " + userId.substring(0, 8);
+  };
+  
   if (error) {
     return (
-      <MainLayout>
-        <div className="p-4">
-          <div className="text-red-500">
-            Ошибка при загрузке контакта: {error.message}
-          </div>
+      <div className="p-4">
+        <div className="text-red-500">
+          Ошибка при загрузке контакта: {error.message}
         </div>
-      </MainLayout>
+      </div>
     );
   }
   
   return (
-    <MainLayout>
-      <div className="p-4">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">
-            {isLoading ? <Skeleton className="h-8 w-48" /> : `Контакт: ${contact?.name || ""}`}
-          </h1>
-          <div className="space-x-2">
+    <div className="p-4">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">
+          {isLoading ? <Skeleton className="h-8 w-48" /> : `Контакт: ${contact?.name || ""}`}
+        </h1>
+        <div className="space-x-2">
+          <Button 
+            variant="outline" 
+            onClick={() => navigate("/contacts")}
+          >
+            Назад к списку
+          </Button>
+          {!isEditing && (
             <Button 
-              variant="outline" 
-              onClick={() => navigate("/contacts")}
+              onClick={handleEdit}
+              className="flex items-center gap-2"
             >
-              Назад к списку
+              <Pencil className="h-4 w-4" /> Редактировать
             </Button>
-            {!isEditing && (
-              <Button 
-                onClick={handleEdit}
-                className="flex items-center gap-2"
-              >
-                <Pencil className="h-4 w-4" /> Редактировать
-              </Button>
-            )}
-          </div>
+          )}
         </div>
-        
-        {isLoading ? (
+      </div>
+      
+      {isLoading ? (
+        <Card>
+          <CardHeader>
+            <CardTitle><Skeleton className="h-6 w-32" /></CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {[...Array(5)].map((_, i) => (
+              <Skeleton key={i} className="h-12 w-full" />
+            ))}
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card>
             <CardHeader>
-              <CardTitle><Skeleton className="h-6 w-32" /></CardTitle>
+              <CardTitle>
+                {isEditing ? "Редактирование контакта" : "Информация о контакте"}
+              </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              {[...Array(5)].map((_, i) => (
-                <Skeleton key={i} className="h-12 w-full" />
-              ))}
+            <CardContent>
+              {isEditing ? (
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Имя</Label>
+                    <Input 
+                      id="name" 
+                      value={formData.name}
+                      onChange={handleNameChange}
+                      required
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label>Телефоны</Label>
+                    {formData.phones.map((phone, index) => (
+                      <div key={index} className="flex gap-2">
+                        <Input 
+                          value={phone.number}
+                          onChange={(e) => handlePhoneChange(index, e.target.value)}
+                        />
+                        <Button 
+                          type="button" 
+                          variant="outline" 
+                          onClick={() => handleRemovePhone(index)}
+                        >
+                          Удалить
+                        </Button>
+                      </div>
+                    ))}
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      onClick={handleAddPhone}
+                    >
+                      Добавить телефон
+                    </Button>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label>Email адреса</Label>
+                    {formData.emails.map((email, index) => (
+                      <div key={index} className="flex gap-2">
+                        <Input 
+                          type="email"
+                          value={email.address}
+                          onChange={(e) => handleEmailChange(index, e.target.value)}
+                        />
+                        <Button 
+                          type="button" 
+                          variant="outline" 
+                          onClick={() => handleRemoveEmail(index)}
+                        >
+                          Удалить
+                        </Button>
+                      </div>
+                    ))}
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      onClick={handleAddEmail}
+                    >
+                      Добавить email
+                    </Button>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="responsible">Ответственный</Label>
+                    <Input 
+                      id="responsible" 
+                      value={formData.responsible_user_id}
+                      onChange={handleResponsibleChange}
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="notes">Заметки</Label>
+                    <Textarea 
+                      id="notes" 
+                      value={formData.notes}
+                      onChange={handleNotesChange}
+                      className="min-h-[100px]"
+                    />
+                  </div>
+                  
+                  <div className="flex justify-end space-x-2">
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      onClick={() => setIsEditing(false)}
+                    >
+                      Отмена
+                    </Button>
+                    <Button type="submit">Сохранить</Button>
+                  </div>
+                </form>
+              ) : contact ? (
+                <div className="space-y-6">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">Имя</p>
+                    <p className="text-lg">{contact.name}</p>
+                  </div>
+                  
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">Телефоны</p>
+                    {contact.phones && Array.isArray(contact.phones) && contact.phones.length > 0 ? (
+                      <div className="space-y-1">
+                        {contact.phones.map((phone: Json, i: number) => (
+                          isPhone(phone) && (
+                            <p key={i}>{phone.number}</p>
+                          )
+                        ))}
+                      </div>
+                    ) : (
+                      <p>-</p>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">Email адреса</p>
+                    {contact.emails && Array.isArray(contact.emails) && contact.emails.length > 0 ? (
+                      <div className="space-y-1">
+                        {contact.emails.map((email: Json, i: number) => (
+                          isEmail(email) && (
+                            <p key={i}>{email.address}</p>
+                          )
+                        ))}
+                      </div>
+                    ) : (
+                      <p>-</p>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">Ответственный</p>
+                    <p>{getResponsibleName(contact.responsible_user_id)}</p>
+                  </div>
+                  
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">Заметки</p>
+                    <p className="whitespace-pre-wrap">{contact.notes || "-"}</p>
+                  </div>
+                </div>
+              ) : (
+                <p>Данные не найдены</p>
+              )}
             </CardContent>
           </Card>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>
-                  {isEditing ? "Редактирование контакта" : "Информация о контакте"}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {isEditing ? (
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Имя</Label>
-                      <Input 
-                        id="name" 
-                        value={formData.name}
-                        onChange={handleNameChange}
-                        required
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label>Телефоны</Label>
-                      {formData.phones.map((phone, index) => (
-                        <div key={index} className="flex gap-2">
-                          <Input 
-                            value={phone.number}
-                            onChange={(e) => handlePhoneChange(index, e.target.value)}
-                          />
-                          <Button 
-                            type="button" 
-                            variant="outline" 
-                            onClick={() => handleRemovePhone(index)}
-                          >
-                            Удалить
-                          </Button>
-                        </div>
-                      ))}
-                      <Button 
-                        type="button" 
-                        variant="outline" 
-                        onClick={handleAddPhone}
-                      >
-                        Добавить телефон
-                      </Button>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label>Email адреса</Label>
-                      {formData.emails.map((email, index) => (
-                        <div key={index} className="flex gap-2">
-                          <Input 
-                            type="email"
-                            value={email.address}
-                            onChange={(e) => handleEmailChange(index, e.target.value)}
-                          />
-                          <Button 
-                            type="button" 
-                            variant="outline" 
-                            onClick={() => handleRemoveEmail(index)}
-                          >
-                            Удалить
-                          </Button>
-                        </div>
-                      ))}
-                      <Button 
-                        type="button" 
-                        variant="outline" 
-                        onClick={handleAddEmail}
-                      >
-                        Добавить email
-                      </Button>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="responsible">Ответственный</Label>
-                      <Input 
-                        id="responsible" 
-                        value={formData.responsible_user_id}
-                        onChange={handleResponsibleChange}
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="notes">Заметки</Label>
-                      <Textarea 
-                        id="notes" 
-                        value={formData.notes}
-                        onChange={handleNotesChange}
-                        className="min-h-[100px]"
-                      />
-                    </div>
-                    
-                    <div className="flex justify-end space-x-2">
-                      <Button 
-                        type="button" 
-                        variant="outline" 
-                        onClick={() => setIsEditing(false)}
-                      >
-                        Отмена
-                      </Button>
-                      <Button type="submit">Сохранить</Button>
-                    </div>
-                  </form>
-                ) : contact ? (
-                  <div className="space-y-6">
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground">Имя</p>
-                      <p className="text-lg">{contact.name}</p>
-                    </div>
-                    
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground">Телефоны</p>
-                      {contact.phones && Array.isArray(contact.phones) && contact.phones.length > 0 ? (
-                        <div className="space-y-1">
-                          {contact.phones.map((phone: Json, i: number) => (
-                            isPhone(phone) && (
-                              <p key={i}>{phone.number}</p>
-                            )
-                          ))}
-                        </div>
-                      ) : (
-                        <p>-</p>
-                      )}
-                    </div>
-                    
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground">Email адреса</p>
-                      {contact.emails && Array.isArray(contact.emails) && contact.emails.length > 0 ? (
-                        <div className="space-y-1">
-                          {contact.emails.map((email: Json, i: number) => (
-                            isEmail(email) && (
-                              <p key={i}>{email.address}</p>
-                            )
-                          ))}
-                        </div>
-                      ) : (
-                        <p>-</p>
-                      )}
-                    </div>
-                    
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground">Ответственный</p>
-                      <p>{contact.responsible_user_id || "-"}</p>
-                    </div>
-                    
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground">Заметки</p>
-                      <p className="whitespace-pre-wrap">{contact.notes || "-"}</p>
-                    </div>
-                  </div>
-                ) : (
-                  <p>Данные не найдены</p>
-                )}
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle>Файлы</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {isEditing ? (
-                  <div className="space-y-4">
-                    <FileUploader 
-                      bucketName="contact_files" 
-                      onUploadComplete={handleFileUploadComplete} 
-                    />
-                    
-                    <div className="pt-4">
-                      <h3 className="text-sm font-medium mb-2">Прикрепленные файлы</h3>
-                      <FileList
-                        files={formData.files}
-                        bucketName="contact_files"
-                        onFileDelete={handleFileDelete}
-                      />
-                    </div>
-                  </div>
-                ) : (
-                  <FileList 
-                    files={formData.files} 
-                    bucketName="contact_files"
-                    readonly
+          
+          <Card>
+            <CardHeader>
+              <CardTitle>Файлы</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {isEditing ? (
+                <div className="space-y-4">
+                  <FileUploader 
+                    bucketName="contact_files" 
+                    onUploadComplete={handleFileUploadComplete} 
                   />
-                )}
-              </CardContent>
-            </Card>
-          </div>
-        )}
-      </div>
-    </MainLayout>
+                  
+                  <div className="pt-4">
+                    <h3 className="text-sm font-medium mb-2">Прикрепленные файлы</h3>
+                    <FileList
+                      files={formData.files}
+                      bucketName="contact_files"
+                      onFileDelete={handleFileDelete}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <FileList 
+                  files={formData.files} 
+                  bucketName="contact_files"
+                  readonly
+                />
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      )}
+    </div>
   );
 }

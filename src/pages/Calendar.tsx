@@ -6,7 +6,6 @@ import { format } from "date-fns";
 import { ru } from "date-fns/locale";
 import moment from "moment";
 import "moment/locale/ru";
-import { MainLayout } from "@/components/layout/MainLayout";
 import { useTasks } from "@/hooks/useTasks";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -86,51 +85,47 @@ export default function CalendarPage() {
 
   if (error) {
     return (
-      <MainLayout>
-        <div className="p-4">
-          <div className="text-red-500">
-            Ошибка при загрузке задач: {error.message}
-          </div>
+      <div className="p-4">
+        <div className="text-red-500">
+          Ошибка при загрузке задач: {error.message}
         </div>
-      </MainLayout>
+      </div>
     );
   }
 
   return (
-    <MainLayout>
-      <div className="p-4 space-y-4">
-        <h1 className="text-2xl font-bold">Календарь задач</h1>
-        
-        {isLoading ? (
-          <div className="space-y-4">
-            <Skeleton className="h-[600px] w-full" />
-          </div>
-        ) : (
-          <div className="h-[600px] bg-white rounded-md border shadow-sm">
-            <BigCalendar
-              localizer={localizer}
-              events={events}
-              startAccessor="start"
-              endAccessor="end"
-              style={{ height: '100%', padding: '1rem' }}
-              views={['month', 'week', 'day']}
-              eventPropGetter={getEventStyle}
-              components={{
-                event: EventComponent,
-              }}
-              messages={{
-                next: "Следующий",
-                previous: "Предыдущий",
-                today: "Сегодня",
-                month: "Месяц",
-                week: "Неделя",
-                day: "День",
-                noEventsInRange: "Нет задач в этом диапазоне",
-              }}
-            />
-          </div>
-        )}
-      </div>
-    </MainLayout>
+    <div className="p-4 space-y-4">
+      <h1 className="text-2xl font-bold">Календарь задач</h1>
+      
+      {isLoading ? (
+        <div className="space-y-4">
+          <Skeleton className="h-[600px] w-full" />
+        </div>
+      ) : (
+        <div className="h-[600px] bg-white rounded-md border shadow-sm">
+          <BigCalendar
+            localizer={localizer}
+            events={events}
+            startAccessor="start"
+            endAccessor="end"
+            style={{ height: '100%', padding: '1rem' }}
+            views={['month', 'week', 'day']}
+            eventPropGetter={getEventStyle}
+            components={{
+              event: EventComponent,
+            }}
+            messages={{
+              next: "Следующий",
+              previous: "Предыдущий",
+              today: "Сегодня",
+              month: "Месяц",
+              week: "Неделя",
+              day: "День",
+              noEventsInRange: "Нет задач в этом диапазоне",
+            }}
+          />
+        </div>
+      )}
+    </div>
   );
 }

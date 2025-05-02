@@ -1,7 +1,6 @@
 
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
-import { MainLayout } from "@/components/layout/MainLayout";
 
 export const ProtectedRoute = () => {
   const { user, isLoading } = useAuth();
@@ -20,10 +19,6 @@ export const ProtectedRoute = () => {
     return <Navigate to="/login" replace />;
   }
 
-  // Render the protected content inside the main layout
-  return (
-    <MainLayout>
-      <Outlet />
-    </MainLayout>
-  );
+  // Render the protected content with the Outlet
+  return <Outlet />;
 };
