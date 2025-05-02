@@ -49,9 +49,15 @@ export const AddTaskDialog = () => {
     order_id: "",
   });
 
+  // Updated handler to convert "none" back to empty string when submitting
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await addTask.mutateAsync(formData);
+    const submissionData = {
+      ...formData,
+      contact_id: formData.contact_id === "none" ? "" : formData.contact_id,
+      order_id: formData.order_id === "none" ? "" : formData.order_id,
+    };
+    await addTask.mutateAsync(submissionData);
     setOpen(false);
     setDate(new Date());
     setFormData({
@@ -150,16 +156,16 @@ export const AddTaskDialog = () => {
           <div className="space-y-2">
             <Label htmlFor="contact_id">Контакт</Label>
             <Select
-              value={formData.contact_id}
+              value={formData.contact_id || "none"}
               onValueChange={(value) =>
-                setFormData({ ...formData, contact_id: value })
+                setFormData({ ...formData, contact_id: value === "none" ? "" : value })
               }
             >
               <SelectTrigger>
                 <SelectValue placeholder="Выберите контакт (опционально)" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Не выбрано</SelectItem>
+                <SelectItem value="none">Не выбрано</SelectItem>
                 {isLoadingContacts ? (
                   <SelectItem value="loading" disabled>Загрузка...</SelectItem>
                 ) : contacts?.length ? (
@@ -180,16 +186,16 @@ export const AddTaskDialog = () => {
           <div className="space-y-2">
             <Label htmlFor="order_id">Заказ</Label>
             <Select
-              value={formData.order_id}
+              value={formData.order_id || "none"}
               onValueChange={(value) =>
-                setFormData({ ...formData, order_id: value })
+                setFormData({ ...formData, order_id: value === "none" ? "" : value })
               }
             >
               <SelectTrigger>
                 <SelectValue placeholder="Выберите заказ (опционально)" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Не выбрано</SelectItem>
+                <SelectItem value="none">Не выбрано</SelectItem>
                 {isLoadingOrders ? (
                   <SelectItem value="loading" disabled>Загрузка...</SelectItem>
                 ) : orders?.length ? (

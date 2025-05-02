@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   PieChart,
@@ -7,7 +6,6 @@ import {
   ResponsiveContainer,
   Legend,
   Tooltip,
-  TooltipProps,
 } from "recharts";
 import {
   ChartContainer,

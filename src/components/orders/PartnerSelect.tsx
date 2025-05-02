@@ -35,7 +35,7 @@ export function PartnerSelect({ value, onChange, required = false, disabled = fa
             <SelectItem value="loading" disabled>Загрузка...</SelectItem>
           ) : partners?.length ? (
             <>
-              <SelectItem value="">Не выбран</SelectItem>
+              <SelectItem value="none">Не выбран</SelectItem>
               {partners.map((partner) => (
                 <SelectItem key={partner.id} value={partner.id}>
                   {partner.name}
