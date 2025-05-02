@@ -1,5 +1,5 @@
-
 import { useTasks } from "@/hooks/useTasks";
+import { useAuth } from "@/context/AuthContext";
 import { AddTaskDialog } from "@/components/tasks/AddTaskDialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -20,6 +20,7 @@ import { Badge } from "@/components/ui/badge";
 export default function Tasks() {
   const { data: tasks, isLoading, error } = useTasks();
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -32,6 +33,16 @@ export default function Tasks() {
       default:
         return <Badge variant="outline">{status}</Badge>;
     }
+  };
+
+  const getResponsibleName = (userId?: string) => {
+    if (!userId) return "-";
+    
+    if (userId === user?.id) {
+      return user?.user_metadata?.full_name || "Вы";
+    }
+    
+    return "Пользователь " + userId.substring(0, 8);
   };
 
   if (error) {
@@ -80,7 +91,7 @@ export default function Tasks() {
                 </TableCell>
                 <TableCell>{task.contact?.name || "-"}</TableCell>
                 <TableCell>{task.order?.order_number || "-"}</TableCell>
-                <TableCell>{task.responsible_user_id || "-"}</TableCell>
+                <TableCell>{getResponsibleName(task.responsible_user_id)}</TableCell>
                 <TableCell className="text-right">
                   <Button 
                     variant="ghost" 

@@ -8,7 +8,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { StatusReportChart } from "@/components/reports/StatusReportChart";
 import { TypeReportChart } from "@/components/reports/TypeReportChart";
-import { MainLayout } from "@/components/layout/MainLayout";
 
 export default function Reports() {
   const { data: leads, isLoading: isLeadsLoading } = useLeads();
@@ -67,69 +66,67 @@ export default function Reports() {
   }, [tasks]);
 
   return (
-    <MainLayout>
-      <div className="p-4 space-y-6">
-        <h1 className="text-2xl font-bold mb-4">Отчеты</h1>
+    <div className="p-4 space-y-6">
+      <h1 className="text-2xl font-bold mb-4">Отчеты</h1>
+      
+      <Tabs defaultValue="leads" className="w-full">
+        <TabsList>
+          <TabsTrigger value="leads">Лиды</TabsTrigger>
+          <TabsTrigger value="orders">Заказы</TabsTrigger>
+          <TabsTrigger value="tasks">Задачи</TabsTrigger>
+        </TabsList>
         
-        <Tabs defaultValue="leads" className="w-full">
-          <TabsList>
-            <TabsTrigger value="leads">Лиды</TabsTrigger>
-            <TabsTrigger value="orders">Заказы</TabsTrigger>
-            <TabsTrigger value="tasks">Задачи</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="leads">
-            <Card>
-              <CardHeader>
-                <CardTitle>Распределение лидов по статусам</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {isLeadsLoading ? (
-                  <div className="space-y-2">
-                    <Skeleton className="h-[200px] w-full" />
-                  </div>
-                ) : (
-                  <StatusReportChart data={leadsData} dataKey="status" />
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          <TabsContent value="orders">
-            <Card>
-              <CardHeader>
-                <CardTitle>Распределение заказов по типам</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {isOrdersLoading ? (
-                  <div className="space-y-2">
-                    <Skeleton className="h-[200px] w-full" />
-                  </div>
-                ) : (
-                  <TypeReportChart data={ordersData} dataKey="type" />
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          <TabsContent value="tasks">
-            <Card>
-              <CardHeader>
-                <CardTitle>Распределение задач по статусам</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {isTasksLoading ? (
-                  <div className="space-y-2">
-                    <Skeleton className="h-[200px] w-full" />
-                  </div>
-                ) : (
-                  <StatusReportChart data={tasksData} dataKey="status" />
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
-      </div>
-    </MainLayout>
+        <TabsContent value="leads">
+          <Card>
+            <CardHeader>
+              <CardTitle>Распределение лидов по статусам</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {isLeadsLoading ? (
+                <div className="space-y-2">
+                  <Skeleton className="h-[200px] w-full" />
+                </div>
+              ) : (
+                <StatusReportChart data={leadsData} dataKey="status" />
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="orders">
+          <Card>
+            <CardHeader>
+              <CardTitle>Распределение заказов по типам</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {isOrdersLoading ? (
+                <div className="space-y-2">
+                  <Skeleton className="h-[200px] w-full" />
+                </div>
+              ) : (
+                <TypeReportChart data={ordersData} dataKey="type" />
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="tasks">
+          <Card>
+            <CardHeader>
+              <CardTitle>Распределение задач по статусам</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {isTasksLoading ? (
+                <div className="space-y-2">
+                  <Skeleton className="h-[200px] w-full" />
+                </div>
+              ) : (
+                <StatusReportChart data={tasksData} dataKey="status" />
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
   );
 }
