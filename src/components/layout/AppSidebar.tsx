@@ -11,28 +11,54 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarHeader,
+  useSidebar,
+  SidebarRail,
 } from "@/components/ui/sidebar";
 import { Link, useLocation } from "react-router-dom";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
 export function AppSidebar() {
   const { signOut } = useAuth();
   const location = useLocation();
+  const { state, openMobile, setOpenMobile } = useSidebar();
+  const isMobile = useIsMobile();
   
   // Функция для определения активного состояния элемента меню
   const isActive = (path: string) => {
     return location.pathname.startsWith(path);
   };
 
+  // Закрывает мобильное меню после перехода по ссылке
+  const handleLinkClick = () => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  };
+
   return (
     <Sidebar>
+      <SidebarHeader className="flex items-center justify-center py-4">
+        <div className={cn("transition-all duration-200", 
+          state === "collapsed" ? "scale-75" : "scale-100"
+        )}>
+          <h2 className="font-bold text-xl text-primary">CRM Nexus</h2>
+        </div>
+      </SidebarHeader>
+      <SidebarRail />
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Навигация</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild className={isActive('/dashboard') ? 'bg-muted' : ''}>
-                  <Link to="/dashboard">
+                <SidebarMenuButton 
+                  asChild 
+                  className={isActive('/dashboard') ? 'bg-muted' : ''}
+                  tooltip="Дашборд"
+                >
+                  <Link to="/dashboard" onClick={handleLinkClick}>
                     <Home className="h-5 w-5" />
                     <span>Дашборд</span>
                   </Link>
@@ -40,8 +66,12 @@ export function AppSidebar() {
               </SidebarMenuItem>
 
               <SidebarMenuItem>
-                <SidebarMenuButton asChild className={isActive('/leads') ? 'bg-muted' : ''}>
-                  <Link to="/leads">
+                <SidebarMenuButton 
+                  asChild 
+                  className={isActive('/leads') ? 'bg-muted' : ''}
+                  tooltip="Лиды"
+                >
+                  <Link to="/leads" onClick={handleLinkClick}>
                     <Phone className="h-5 w-5" />
                     <span>Лиды</span>
                   </Link>
@@ -49,8 +79,12 @@ export function AppSidebar() {
               </SidebarMenuItem>
 
               <SidebarMenuItem>
-                <SidebarMenuButton asChild className={isActive('/contacts') ? 'bg-muted' : ''}>
-                  <Link to="/contacts">
+                <SidebarMenuButton 
+                  asChild 
+                  className={isActive('/contacts') ? 'bg-muted' : ''}
+                  tooltip="Контакты"
+                >
+                  <Link to="/contacts" onClick={handleLinkClick}>
                     <Users className="h-5 w-5" />
                     <span>Контакты</span>
                   </Link>
@@ -58,8 +92,12 @@ export function AppSidebar() {
               </SidebarMenuItem>
 
               <SidebarMenuItem>
-                <SidebarMenuButton asChild className={isActive('/orders') ? 'bg-muted' : ''}>
-                  <Link to="/orders">
+                <SidebarMenuButton 
+                  asChild 
+                  className={isActive('/orders') ? 'bg-muted' : ''}
+                  tooltip="Заказы"
+                >
+                  <Link to="/orders" onClick={handleLinkClick}>
                     <ShoppingCart className="h-5 w-5" />
                     <span>Заказы</span>
                   </Link>
@@ -67,8 +105,12 @@ export function AppSidebar() {
               </SidebarMenuItem>
               
               <SidebarMenuItem>
-                <SidebarMenuButton asChild className={isActive('/tasks') ? 'bg-muted' : ''}>
-                  <Link to="/tasks">
+                <SidebarMenuButton 
+                  asChild 
+                  className={isActive('/tasks') ? 'bg-muted' : ''}
+                  tooltip="Задачи"
+                >
+                  <Link to="/tasks" onClick={handleLinkClick}>
                     <CheckSquare className="h-5 w-5" />
                     <span>Задачи</span>
                   </Link>
@@ -76,8 +118,12 @@ export function AppSidebar() {
               </SidebarMenuItem>
               
               <SidebarMenuItem>
-                <SidebarMenuButton asChild className={isActive('/calendar') ? 'bg-muted' : ''}>
-                  <Link to="/calendar">
+                <SidebarMenuButton 
+                  asChild 
+                  className={isActive('/calendar') ? 'bg-muted' : ''}
+                  tooltip="Календарь"
+                >
+                  <Link to="/calendar" onClick={handleLinkClick}>
                     <CalendarDays className="h-5 w-5" />
                     <span>Календарь</span>
                   </Link>
@@ -85,8 +131,12 @@ export function AppSidebar() {
               </SidebarMenuItem>
               
               <SidebarMenuItem>
-                <SidebarMenuButton asChild className={isActive('/reports') ? 'bg-muted' : ''}>
-                  <Link to="/reports">
+                <SidebarMenuButton 
+                  asChild 
+                  className={isActive('/reports') ? 'bg-muted' : ''}
+                  tooltip="Отчеты"
+                >
+                  <Link to="/reports" onClick={handleLinkClick}>
                     <BarChart3 className="h-5 w-5" />
                     <span>Отчеты</span>
                   </Link>
@@ -101,8 +151,12 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild className={isActive('/products') ? 'bg-muted' : ''}>
-                  <Link to="/products">
+                <SidebarMenuButton 
+                  asChild 
+                  className={isActive('/products') ? 'bg-muted' : ''}
+                  tooltip="Товары"
+                >
+                  <Link to="/products" onClick={handleLinkClick}>
                     <Package2 className="h-5 w-5" />
                     <span>Товары</span>
                   </Link>
@@ -110,8 +164,12 @@ export function AppSidebar() {
               </SidebarMenuItem>
               
               <SidebarMenuItem>
-                <SidebarMenuButton asChild className={isActive('/partners') ? 'bg-muted' : ''}>
-                  <Link to="/partners">
+                <SidebarMenuButton 
+                  asChild 
+                  className={isActive('/partners') ? 'bg-muted' : ''}
+                  tooltip="Партнеры"
+                >
+                  <Link to="/partners" onClick={handleLinkClick}>
                     <Building2 className="h-5 w-5" />
                     <span>Партнеры</span>
                   </Link>
