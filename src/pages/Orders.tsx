@@ -127,7 +127,7 @@ export default function Orders() {
                     <TableCell>{order.client?.name || "-"}</TableCell>
                     <TableCell>{order.order_type}</TableCell>
                     <TableCell>{order.status}</TableCell>
-                    <TableCell>{order.amount.toLocaleString()} ₽</TableCell>
+                    <TableCell>{order.amount.toLocaleString()} €</TableCell>
                     <TableCell>{order.payment_status}</TableCell>
                     <TableCell>{order.responsible_user_id || "-"}</TableCell>
                     <TableCell>{order.partner?.name || "-"}</TableCell>

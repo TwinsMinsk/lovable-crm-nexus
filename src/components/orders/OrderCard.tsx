@@ -55,7 +55,7 @@ export const OrderCard = ({ order, statuses }: OrderCardProps) => {
           {order.order_type}
         </div>
         <div className="text-sm font-bold mt-1">
-          {order.amount.toLocaleString()} ₽
+          {order.amount.toLocaleString()} €
         </div>
       </CardContent>
       <CardFooter className="pt-0 flex justify-between text-xs">

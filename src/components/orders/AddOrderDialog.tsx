@@ -138,7 +138,7 @@ export const AddOrderDialog = () => {
       <DialogTrigger asChild>
         <Button>Добавить заказ</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Добавить новый заказ</DialogTitle>
         </DialogHeader>
@@ -273,7 +273,7 @@ export const AddOrderDialog = () => {
                       <div>
                         <div className="font-medium">{item.product_name}</div>
                         <div className="text-sm text-muted-foreground">
-                          {item.quantity} x {item.price.toLocaleString()} ₽ = {(item.quantity * item.price).toLocaleString()} ₽
+                          {item.quantity} x {item.price.toLocaleString()} € = {(item.quantity * item.price).toLocaleString()} €
                         </div>
                       </div>
                       <Button
@@ -307,7 +307,7 @@ export const AddOrderDialog = () => {
                     ) : products?.length ? (
                       products.map((product) => (
                         <SelectItem key={product.id} value={product.id}>
-                          {product.name} - {product.price.toLocaleString()} ₽
+                          {product.name} - {product.price.toLocaleString()} €
                         </SelectItem>
                       ))
                     ) : (
@@ -343,16 +343,16 @@ export const AddOrderDialog = () => {
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="amount">Сумма*</Label>
+            <Label htmlFor="amount">Сумма (€)*</Label>
             <Input
               id="amount"
-              type="number"
-              min="0"
-              step="0.01"
-              value={formData.amount}
-              onChange={(e) =>
-                setFormData({ ...formData, amount: parseFloat(e.target.value) || 0 })
-              }
+              type="text"
+              value={formData.amount.toString()}
+              onChange={(e) => {
+                // Allow only numbers and decimal point
+                const value = e.target.value.replace(/[^\d.]/g, '');
+                setFormData({ ...formData, amount: parseFloat(value) || 0 });
+              }}
               required
             />
           </div>

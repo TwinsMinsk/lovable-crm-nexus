@@ -23,6 +23,11 @@ export function AddPartnerDialog() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!name.trim()) {
+      toast.error("Название компании не может быть пустым");
+      return;
+    }
+
     try {
       await addPartnerMutation.mutateAsync({
         name,
@@ -134,7 +139,7 @@ export function AddPartnerDialog() {
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>
               Отмена
             </Button>
-            <Button type="submit" disabled={addPartnerMutation.isPending}>
+            <Button type="submit" disabled={addPartnerMutation.isPending || !name.trim()}>
               {addPartnerMutation.isPending ? "Сохранение..." : "Сохранить"}
             </Button>
           </div>

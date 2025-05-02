@@ -13,3 +13,7 @@ export function generateOrderNumber() {
   const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
   return `ORD-${year}${month}-${random}`;
 }
+
+export const formatCurrency = (value: number) => {
+  return `${value.toLocaleString()} €`;
+};

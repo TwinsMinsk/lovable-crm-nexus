@@ -322,7 +322,7 @@ export default function OrderDetail() {
                     )}
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">Сумма</p>
-                      <p className="font-bold">{order.amount.toLocaleString()} ₽</p>
+                      <p className="font-bold">{order.amount.toLocaleString()} €</p>
                     </div>
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">Статус заказа</p>
@@ -351,6 +351,7 @@ export default function OrderDetail() {
                       }))} 
                       onItemsChange={() => {}} 
                       readOnly={true} 
+                      currencySymbol="€"
                     />
                   )}
                   
@@ -381,7 +382,6 @@ export default function OrderDetail() {
                     <p className="text-sm font-medium text-muted-foreground">ID заказа</p>
                     <p className="text-xs">{order.id}</p>
                   </div>
-                  {/* Additional info could go here */}
                 </div>
               )}
             </CardContent>
