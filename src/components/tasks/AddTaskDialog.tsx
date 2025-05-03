@@ -230,4 +230,4 @@ export const AddTaskDialog = () => {
       </DialogContent>
     </Dialog>
   );
-};
+}

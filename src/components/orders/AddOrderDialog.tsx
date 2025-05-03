@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useAddOrder } from "@/hooks/useAddOrder";
@@ -224,7 +223,7 @@ export const AddOrderDialog = () => {
                   <SelectValue placeholder="Выберите партнера" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Не выбрано</SelectItem>
+                  <SelectItem value="none">Не выбрано</SelectItem>
                   {isLoadingPartners ? (
                     <SelectItem value="loading" disabled>Загрузка...</SelectItem>
                   ) : partners?.length ? (
