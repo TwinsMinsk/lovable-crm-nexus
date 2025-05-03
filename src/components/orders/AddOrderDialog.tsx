@@ -23,7 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { generateOrderNumber } from "@/lib/utils";
+import { generateOrderNumber, formatCurrency } from "@/lib/utils";
 import { X, Plus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
@@ -112,10 +112,17 @@ export const AddOrderDialog = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!formData.client_id) {
+      return;
+    }
+    
     await addOrder.mutateAsync({
       ...formData,
       items: orderItems,
+      partner_id: formData.partner_id || undefined,
     });
+    
     setOpen(false);
     setFormData({
       order_number: generateOrderNumber(),
@@ -217,6 +224,7 @@ export const AddOrderDialog = () => {
                   <SelectValue placeholder="Выберите партнера" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="">Не выбрано</SelectItem>
                   {isLoadingPartners ? (
                     <SelectItem value="loading" disabled>Загрузка...</SelectItem>
                   ) : partners?.length ? (
@@ -346,12 +354,12 @@ export const AddOrderDialog = () => {
             <Label htmlFor="amount">Сумма (€)*</Label>
             <Input
               id="amount"
-              type="text"
-              value={formData.amount.toString()}
+              value={formData.amount}
               onChange={(e) => {
                 // Allow only numbers and decimal point
-                const value = e.target.value.replace(/[^\d.]/g, '');
-                setFormData({ ...formData, amount: parseFloat(value) || 0 });
+                const value = e.target.value.replace(/[^0-9.]/g, '');
+                const numericValue = parseFloat(value) || 0;
+                setFormData({ ...formData, amount: numericValue });
               }}
               required
             />

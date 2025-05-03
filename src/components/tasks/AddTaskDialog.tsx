@@ -54,8 +54,8 @@ export const AddTaskDialog = () => {
     e.preventDefault();
     const submissionData = {
       ...formData,
-      contact_id: formData.contact_id === "none" ? "" : formData.contact_id,
-      order_id: formData.order_id === "none" ? "" : formData.order_id,
+      contact_id: formData.contact_id === "none" ? undefined : formData.contact_id || undefined,
+      order_id: formData.order_id === "none" ? undefined : formData.order_id || undefined,
     };
     await addTask.mutateAsync(submissionData);
     setOpen(false);
@@ -142,12 +142,13 @@ export const AddTaskDialog = () => {
                   )}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
+              <PopoverContent className="w-auto p-0 pointer-events-auto" align="start">
                 <Calendar
                   mode="single"
                   selected={date}
                   onSelect={handleDateSelect}
                   initialFocus
+                  className="pointer-events-auto"
                 />
               </PopoverContent>
             </Popover>

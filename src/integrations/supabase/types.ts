@@ -185,21 +185,36 @@ export type Database = {
       }
       partners: {
         Row: {
+          contact_person: string | null
           created_at: string
+          email: string | null
           id: string
           name: string
+          phone: string | null
+          specialization: string | null
+          terms: string | null
           user_id: string
         }
         Insert: {
+          contact_person?: string | null
           created_at?: string
+          email?: string | null
           id?: string
           name: string
+          phone?: string | null
+          specialization?: string | null
+          terms?: string | null
           user_id: string
         }
         Update: {
+          contact_person?: string | null
           created_at?: string
+          email?: string | null
           id?: string
           name?: string
+          phone?: string | null
+          specialization?: string | null
+          terms?: string | null
           user_id?: string
         }
         Relationships: []
