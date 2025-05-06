@@ -1,4 +1,3 @@
-
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
@@ -8,24 +7,24 @@ import { NotificationBell } from "@/components/notifications/NotificationBell";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Outlet } from "react-router-dom";
 import { ReactNode } from "react";
-
 interface MainLayoutProps {
   children?: ReactNode;
 }
-
-export function MainLayout({ children }: MainLayoutProps) {
-  const { signOut } = useAuth();
+export function MainLayout({
+  children
+}: MainLayoutProps) {
+  const {
+    signOut
+  } = useAuth();
   const isMobile = useIsMobile();
-
-  return (
-    <SidebarProvider defaultOpen={!isMobile}>
+  return <SidebarProvider defaultOpen={!isMobile}>
       <div className="min-h-screen flex w-full">
         <AppSidebar />
         <div className="flex-1 flex flex-col overflow-hidden">
           <header className="border-b h-14 flex items-center justify-between px-6 shrink-0">
             <div className="flex items-center">
               <SidebarTrigger />
-              {!isMobile && <div className="ml-4 font-semibold">CRM Nexus</div>}
+              {!isMobile && <div className="ml-4 font-semibold">CRM Lomuebles</div>}
             </div>
             <div className="flex items-center gap-3">
               <NotificationBell />
@@ -40,6 +39,5 @@ export function MainLayout({ children }: MainLayoutProps) {
           </main>
         </div>
       </div>
-    </SidebarProvider>
-  );
+    </SidebarProvider>;
 }
