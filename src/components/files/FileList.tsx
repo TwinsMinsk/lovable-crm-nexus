@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabaseClient";
-import { Download, File, Trash2 } from "lucide-react";
+import { File, Download, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 interface FileInfo {
@@ -27,6 +27,14 @@ export function FileList({
 }: FileListProps) {
   const handleDelete = async (path: string) => {
     try {
+      // Check if bucket exists before attempting to delete
+      const { data: buckets } = await supabase.storage.listBuckets();
+      const bucketExists = buckets?.some(b => b.name === bucketName);
+      
+      if (!bucketExists) {
+        throw new Error(`Bucket "${bucketName}" not found`);
+      }
+      
       const { error } = await supabase.storage.from(bucketName).remove([path]);
       if (error) throw error;
       
@@ -40,7 +48,7 @@ export function FileList({
     }
   };
 
-  if (!files.length) {
+  if (!files || !files.length) {
     return <p className="text-sm text-muted-foreground">Нет прикрепленных файлов</p>;
   }
 

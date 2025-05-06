@@ -13,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useAuth } from "@/context/AuthContext";
 
 // Import Json type from Supabase types to properly handle JSON data
 import { Json } from "@/integrations/supabase/types";
@@ -48,6 +49,17 @@ function isEmail(obj: any): obj is Email {
 export default function Contacts() {
   const { data: contacts, isLoading, error } = useContacts();
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const getResponsibleName = (userId?: string) => {
+    if (!userId) return "-";
+    
+    if (userId === user?.id) {
+      return user?.user_metadata?.full_name || "Вы";
+    }
+    
+    return "Пользователь " + userId.substring(0, 8);
+  };
 
   if (error) {
     return (
@@ -112,7 +124,7 @@ export default function Contacts() {
                       })
                     : "-"}
                 </TableCell>
-                <TableCell>{contact.responsible_user_id || "-"}</TableCell>
+                <TableCell>{getResponsibleName(contact.responsible_user_id)}</TableCell>
                 <TableCell>{contact.notes || "-"}</TableCell>
                 <TableCell className="text-right">
                   <Button 
