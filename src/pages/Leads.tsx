@@ -13,10 +13,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Leads() {
   const { data: leads, isLoading, error } = useLeads();
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const getResponsibleName = (userId?: string) => {
+    if (!userId) return "-";
+    
+    if (userId === user?.id) {
+      return user?.user_metadata?.full_name || "Вы";
+    }
+    
+    return "Пользователь " + userId.substring(0, 8);
+  };
 
   if (error) {
     return (
@@ -62,7 +74,7 @@ export default function Leads() {
                 <TableCell>{lead.email || "-"}</TableCell>
                 <TableCell>{lead.source || "-"}</TableCell>
                 <TableCell>{lead.status}</TableCell>
-                <TableCell>{lead.responsible_user_id || "-"}</TableCell>
+                <TableCell>{getResponsibleName(lead.responsible_user_id)}</TableCell>
                 <TableCell className="text-right">
                   <Button 
                     variant="ghost" 

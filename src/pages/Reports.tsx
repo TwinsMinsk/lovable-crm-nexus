@@ -70,58 +70,76 @@ export default function Reports() {
       <h1 className="text-2xl font-bold mb-4">Отчеты</h1>
       
       <Tabs defaultValue="leads" className="w-full">
-        <TabsList>
+        <TabsList className="mb-4">
           <TabsTrigger value="leads">Лиды</TabsTrigger>
           <TabsTrigger value="orders">Заказы</TabsTrigger>
           <TabsTrigger value="tasks">Задачи</TabsTrigger>
         </TabsList>
         
         <TabsContent value="leads">
-          <Card>
+          <Card className="overflow-hidden">
             <CardHeader>
               <CardTitle>Распределение лидов по статусам</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-0 md:p-6">
               {isLeadsLoading ? (
                 <div className="space-y-2">
-                  <Skeleton className="h-[200px] w-full" />
+                  <Skeleton className="h-[300px] w-full" />
+                </div>
+              ) : leadsData.length > 0 ? (
+                <div className="h-[300px] w-full">
+                  <StatusReportChart data={leadsData} dataKey="status" />
                 </div>
               ) : (
-                <StatusReportChart data={leadsData} dataKey="status" />
+                <div className="h-[300px] w-full flex justify-center items-center">
+                  <p>Нет данных для отображения</p>
+                </div>
               )}
             </CardContent>
           </Card>
         </TabsContent>
         
         <TabsContent value="orders">
-          <Card>
+          <Card className="overflow-hidden">
             <CardHeader>
               <CardTitle>Распределение заказов по типам</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-0 md:p-6">
               {isOrdersLoading ? (
                 <div className="space-y-2">
-                  <Skeleton className="h-[200px] w-full" />
+                  <Skeleton className="h-[300px] w-full" />
+                </div>
+              ) : ordersData.length > 0 ? (
+                <div className="h-[300px] w-full">
+                  <TypeReportChart data={ordersData} dataKey="type" />
                 </div>
               ) : (
-                <TypeReportChart data={ordersData} dataKey="type" />
+                <div className="h-[300px] w-full flex justify-center items-center">
+                  <p>Нет данных для отображения</p>
+                </div>
               )}
             </CardContent>
           </Card>
         </TabsContent>
         
         <TabsContent value="tasks">
-          <Card>
+          <Card className="overflow-hidden">
             <CardHeader>
               <CardTitle>Распределение задач по статусам</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-0 md:p-6">
               {isTasksLoading ? (
                 <div className="space-y-2">
-                  <Skeleton className="h-[200px] w-full" />
+                  <Skeleton className="h-[300px] w-full" />
+                </div>
+              ) : tasksData.length > 0 ? (
+                <div className="h-[300px] w-full">
+                  <StatusReportChart data={tasksData} dataKey="status" />
                 </div>
               ) : (
-                <StatusReportChart data={tasksData} dataKey="status" />
+                <div className="h-[300px] w-full flex justify-center items-center">
+                  <p>Нет данных для отображения</p>
+                </div>
               )}
             </CardContent>
           </Card>
