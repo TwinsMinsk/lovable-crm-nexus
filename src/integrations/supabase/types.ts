@@ -118,6 +118,7 @@ export type Database = {
         Row: {
           addresses: Json | null
           amount: number
+          associated_supplier_id: string | null
           client_id: string
           created_at: string
           files: Json | null
@@ -135,6 +136,7 @@ export type Database = {
         Insert: {
           addresses?: Json | null
           amount?: number
+          associated_supplier_id?: string | null
           client_id: string
           created_at?: string
           files?: Json | null
@@ -152,6 +154,7 @@ export type Database = {
         Update: {
           addresses?: Json | null
           amount?: number
+          associated_supplier_id?: string | null
           client_id?: string
           created_at?: string
           files?: Json | null
@@ -167,6 +170,13 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "orders_associated_supplier_id_fkey"
+            columns: ["associated_supplier_id"]
+            isOneToOne: false
+            referencedRelation: "suppliers"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "orders_client_id_fkey"
             columns: ["client_id"]
@@ -222,6 +232,7 @@ export type Database = {
       products: {
         Row: {
           created_at: string
+          default_supplier_id: string | null
           description: string | null
           id: string
           image_url: string | null
@@ -232,6 +243,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          default_supplier_id?: string | null
           description?: string | null
           id?: string
           image_url?: string | null
@@ -242,6 +254,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          default_supplier_id?: string | null
           description?: string | null
           id?: string
           image_url?: string | null
@@ -250,7 +263,15 @@ export type Database = {
           sku?: string | null
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "products_default_supplier_id_fkey"
+            columns: ["default_supplier_id"]
+            isOneToOne: false
+            referencedRelation: "suppliers"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       suppliers: {
         Row: {

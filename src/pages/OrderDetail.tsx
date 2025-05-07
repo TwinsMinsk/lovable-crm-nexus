@@ -14,6 +14,7 @@ import { Pencil } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PartnerSelect } from "@/components/orders/PartnerSelect";
 import { OrderItemList } from "@/components/orders/OrderItemList";
+import { SupplierSelect } from "@/components/orders/SupplierSelect";
 
 interface OrderItem {
   product_id: string;
@@ -34,7 +35,8 @@ export default function OrderDetail() {
     status: "",
     payment_status: "",
     partner_id: "",
-    notes: ""
+    notes: "",
+    associated_supplier_id: ""
   });
 
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
@@ -70,7 +72,8 @@ export default function OrderDetail() {
         status: order.status || "",
         payment_status: order.payment_status || "",
         partner_id: order.partner_id || "",
-        notes: order.notes || ""
+        notes: order.notes || "",
+        associated_supplier_id: order.associated_supplier_id || ""
       });
       
       // Initialize order items if they exist with proper type casting
@@ -120,6 +123,7 @@ export default function OrderDetail() {
         extraData: {
           payment_status: formData.payment_status,
           partner_id: formData.partner_id || null,
+          associated_supplier_id: formData.associated_supplier_id || null,
           notes: formData.notes,
           items: orderItems,
           amount: totalAmount
@@ -141,7 +145,8 @@ export default function OrderDetail() {
         status: order.status || "",
         payment_status: order.payment_status || "",
         partner_id: order.partner_id || "",
-        notes: order.notes || ""
+        notes: order.notes || "",
+        associated_supplier_id: order.associated_supplier_id || ""
       });
       
       // Also use proper type casting when setting items in edit mode
@@ -159,8 +164,8 @@ export default function OrderDetail() {
     }
   };
   
-  // Показывать выбор партнера только для заказов типа "Изготовление"
-  const showPartnerSelection = order?.order_type === "Изготовление";
+  // Показывать выбор поставщика для всех заказов
+  const showSupplierSelection = true;
   
   // Determine which workflow this order belongs to
   const getOrderStatuses = () => {
@@ -262,6 +267,14 @@ export default function OrderDetail() {
                       </Select>
                     </div>
                     
+                    {/* Add supplier selection field */}
+                    <div className="md:col-span-2">
+                      <SupplierSelect 
+                        value={formData.associated_supplier_id} 
+                        onChange={(value) => handleInputChange("associated_supplier_id", value)}
+                      />
+                    </div>
+                    
                     {showPartnerSelection && (
                       <div className="md:col-span-2">
                         <PartnerSelect 
@@ -358,6 +371,12 @@ export default function OrderDetail() {
                   <div>
                     <p className="text-sm font-medium text-muted-foreground">Заметки</p>
                     <p className="whitespace-pre-wrap">{order.notes || "-"}</p>
+                  </div>
+                  
+                  {/* Display supplier information */}
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">Поставщик</p>
+                    <p>{order.associated_supplier?.supplier_name || "-"}</p>
                   </div>
                 </div>
               ) : (

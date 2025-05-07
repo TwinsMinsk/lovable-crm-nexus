@@ -8,6 +8,7 @@ export interface Product {
   price: number;
   image_url: string | null;
   user_id: string;
+  default_supplier_id: string | null;
 }
 
 export interface CreateProductData {
@@ -17,6 +18,7 @@ export interface CreateProductData {
   price: number;
   image_url?: string;
   user_id: string;
+  default_supplier_id?: string | null;
 }
 
 export interface UpdateProductData {
@@ -26,4 +28,5 @@ export interface UpdateProductData {
   sku?: string | null;
   price?: number;
   image_url?: string | null;
+  default_supplier_id?: string | null;
 }

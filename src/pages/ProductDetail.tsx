@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useProduct } from "@/hooks/useProduct";
@@ -11,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { ChevronLeft, Save } from "lucide-react";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
+import { SupplierSelect } from "@/components/orders/SupplierSelect";
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
@@ -24,6 +24,7 @@ export default function ProductDetail() {
   const [sku, setSku] = useState(product?.sku || "");
   const [price, setPrice] = useState(product?.price?.toString() || "");
   const [imageUrl, setImageUrl] = useState(product?.image_url || "");
+  const [defaultSupplierId, setDefaultSupplierId] = useState(product?.default_supplier_id || "");
   
   // Update form when product data is loaded
   useState(() => {
@@ -33,6 +34,7 @@ export default function ProductDetail() {
       setSku(product.sku || "");
       setPrice(product.price.toString());
       setImageUrl(product.image_url || "");
+      setDefaultSupplierId(product.default_supplier_id || "");
     }
   });
   
@@ -54,7 +56,8 @@ export default function ProductDetail() {
         description: description || null,
         sku: sku || null,
         price: priceValue,
-        image_url: imageUrl || null
+        image_url: imageUrl || null,
+        default_supplier_id: defaultSupplierId || null
       });
       
       toast.success("Товар успешно обновлен");
@@ -183,6 +186,14 @@ export default function ProductDetail() {
                   required
                 />
               </div>
+            </div>
+            
+            <div className="space-y-2">
+              <SupplierSelect
+                value={defaultSupplierId}
+                onChange={setDefaultSupplierId}
+                label="Основной поставщик"
+              />
             </div>
             
             <div className="space-y-2">

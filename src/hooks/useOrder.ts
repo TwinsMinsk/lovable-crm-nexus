@@ -13,7 +13,8 @@ export const useOrder = (id: string | undefined) => {
         .select(`
           *,
           client:client_id(id, name),
-          partner:partner_id(id, name)
+          partner:partner_id(id, name),
+          associated_supplier:associated_supplier_id(id, supplier_name)
         `)
         .eq("id", id)
         .single();

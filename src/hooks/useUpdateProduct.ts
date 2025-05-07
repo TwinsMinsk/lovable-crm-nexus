@@ -8,12 +8,11 @@ export function useUpdateProduct() {
 
   return useMutation({
     mutationFn: async (data: UpdateProductData) => {
-      const { id, ...updateData } = data;
+      const { id, ...productData } = data;
 
-      // Use any type to bypass TypeScript's type checking
-      const { error } = await (supabase as any)
+      const { error } = await supabase
         .from("products")
-        .update(updateData)
+        .update(productData)
         .eq("id", id);
 
       if (error) {

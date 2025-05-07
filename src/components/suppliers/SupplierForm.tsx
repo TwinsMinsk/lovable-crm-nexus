@@ -64,7 +64,7 @@ export function SupplierForm({ supplier, isSubmitting, onSubmit }: SupplierFormP
           <SupplierContactInfo form={form} />
           
           <Separator />
-          <SupplierDeliveryInfo form={form} />
+          <SupplierDeliveryInfo form={form} supplierId={supplier?.id} />
         </div>
         
         <div className="flex justify-end">
