@@ -1,6 +1,6 @@
 
 import { useParams, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSupplier } from "@/hooks/useSupplier";
 import { useUpdateSupplier } from "@/hooks/useUpdateSupplier";
 import { useDeleteSupplier } from "@/hooks/useDeleteSupplier";
@@ -53,7 +53,7 @@ export default function SupplierDetail() {
   });
 
   // Update form values when supplier data is loaded
-  React.useEffect(() => {
+  useEffect(() => {
     if (supplier) {
       form.reset({
         supplier_name: supplier.supplier_name,
