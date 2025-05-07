@@ -26,6 +26,8 @@ import PartnerDetail from "@/pages/PartnerDetail";
 import Calendar from "@/pages/Calendar";
 import Reports from "@/pages/Reports";
 import NotFound from "@/pages/NotFound";
+import Suppliers from "@/pages/Suppliers";
+import SupplierDetail from "@/pages/SupplierDetail";
 
 // Создаем клиент вне компонента App
 const queryClient = new QueryClient({
@@ -67,6 +69,8 @@ const App = () => {
                 <Route path="/products/:id" element={<ProductDetail />} />
                 <Route path="/partners" element={<Partners />} />
                 <Route path="/partners/:id" element={<PartnerDetail />} />
+                <Route path="/suppliers" element={<Suppliers />} />
+                <Route path="/suppliers/:id" element={<SupplierDetail />} />
                 <Route path="/reports" element={<Reports />} />
                 <Route path="/settings" element={<div className="p-4"><h1 className="text-3xl font-bold">Настройки</h1><p>Страница в разработке</p></div>} />
               </Route>

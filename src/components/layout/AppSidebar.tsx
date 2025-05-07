@@ -1,6 +1,7 @@
+
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
-import { LogOut, Home, Users, Phone, ShoppingCart, CalendarDays, CheckSquare, Package2, Building2, BarChart3 } from "lucide-react";
+import { LogOut, Home, Users, Phone, ShoppingCart, CalendarDays, CheckSquare, Package2, Building2, BarChart3, Truck } from "lucide-react";
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarHeader, useSidebar, SidebarRail } from "@/components/ui/sidebar";
 import { Link, useLocation } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -124,6 +125,15 @@ export function AppSidebar() {
                   <Link to="/partners" onClick={handleLinkClick}>
                     <Building2 className="h-5 w-5" />
                     <span>Партнеры</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild className={isActive('/suppliers') ? 'bg-muted' : ''} tooltip="Поставщики">
+                  <Link to="/suppliers" onClick={handleLinkClick}>
+                    <Truck className="h-5 w-5" />
+                    <span>Поставщики</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

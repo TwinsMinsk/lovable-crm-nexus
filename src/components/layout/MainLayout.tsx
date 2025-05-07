@@ -1,3 +1,4 @@
+
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
@@ -29,7 +30,7 @@ export function MainLayout({
             <div className="flex items-center gap-3">
               <NotificationBell />
               <Button variant="ghost" onClick={signOut} className="flex gap-2 items-center">
-                <span>Выйти</span>
+                <span>Выход</span>
                 <LogOut className="h-4 w-4" />
               </Button>
             </div>

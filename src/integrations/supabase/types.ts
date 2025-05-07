@@ -252,6 +252,63 @@ export type Database = {
         }
         Relationships: []
       }
+      suppliers: {
+        Row: {
+          address: string | null
+          contact_person: string | null
+          created_at: string
+          delivery_terms: string | null
+          email: string | null
+          id: string
+          notes: string | null
+          payment_terms: string | null
+          phone: string | null
+          product_categories_supplied: string | null
+          rating: number | null
+          secondary_phone: string | null
+          supplier_name: string
+          updated_at: string
+          user_id: string | null
+          website: string | null
+        }
+        Insert: {
+          address?: string | null
+          contact_person?: string | null
+          created_at?: string
+          delivery_terms?: string | null
+          email?: string | null
+          id?: string
+          notes?: string | null
+          payment_terms?: string | null
+          phone?: string | null
+          product_categories_supplied?: string | null
+          rating?: number | null
+          secondary_phone?: string | null
+          supplier_name: string
+          updated_at?: string
+          user_id?: string | null
+          website?: string | null
+        }
+        Update: {
+          address?: string | null
+          contact_person?: string | null
+          created_at?: string
+          delivery_terms?: string | null
+          email?: string | null
+          id?: string
+          notes?: string | null
+          payment_terms?: string | null
+          phone?: string | null
+          product_categories_supplied?: string | null
+          rating?: number | null
+          secondary_phone?: string | null
+          supplier_name?: string
+          updated_at?: string
+          user_id?: string | null
+          website?: string | null
+        }
+        Relationships: []
+      }
       tasks: {
         Row: {
           contact_id: string | null
