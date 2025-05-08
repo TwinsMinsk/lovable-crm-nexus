@@ -32,7 +32,8 @@ export function useProduct(id: string | undefined) {
         sku: data.sku || null,
         price: data.price || 0,
         image_url: data.image_url || null,
-        user_id: data.user_id
+        user_id: data.user_id,
+        default_supplier_id: data.default_supplier_id || null
       };
 
       return product;

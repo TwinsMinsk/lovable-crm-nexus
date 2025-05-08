@@ -40,6 +40,9 @@ export default function OrderDetail() {
   });
 
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
+  
+  // Define showPartnerSelection variable here
+  const showPartnerSelection = true;
 
   // Statuses for the workflows
   const statuses = {
