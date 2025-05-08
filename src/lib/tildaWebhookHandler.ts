@@ -112,7 +112,7 @@ export async function processTildaLead(payload: TildaLeadPayload) {
     };
 
     // Сохранение в базу данных
-    const { data, error } = await supabase.from("leads").insert(leadData);
+    const { data, error } = await supabase.from("leads").insert(leadData).select();
 
     if (error) {
       console.error("Ошибка при сохранении лида:", error);

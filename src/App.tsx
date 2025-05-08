@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
 
 // Context
-import { ThemeProvider } from "./components/ui/theme-provider";
+import { ThemeProvider } from "@/components/ui/theme-provider";
 import { MainLayout } from "./components/layout/MainLayout";
 
 // Pages
