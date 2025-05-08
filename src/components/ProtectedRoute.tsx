@@ -1,8 +1,13 @@
 
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
+import React from "react";
 
-export const ProtectedRoute = () => {
+interface ProtectedRouteProps {
+  children?: React.ReactNode;
+}
+
+export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const { user, isLoading } = useAuth();
   
   // Show loading state while checking authentication
@@ -19,6 +24,6 @@ export const ProtectedRoute = () => {
     return <Navigate to="/login" replace />;
   }
 
-  // Render the protected content with the Outlet
-  return <Outlet />;
+  // Render the protected content - either children or Outlet
+  return children ? <>{children}</> : <Outlet />;
 };
