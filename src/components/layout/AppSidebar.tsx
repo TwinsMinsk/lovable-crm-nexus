@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
-import { useMobile } from "@/hooks/use-mobile";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
@@ -32,7 +32,7 @@ interface SidebarProps {
 export function AppSidebar({ isSidebarOpen, toggleSidebar }: SidebarProps) {
   const { pathname } = useLocation();
   const { signOut } = useAuth();
-  const { isMobile } = useMobile();
+  const isMobile = useIsMobile();
 
   const handleSignOut = () => {
     signOut();

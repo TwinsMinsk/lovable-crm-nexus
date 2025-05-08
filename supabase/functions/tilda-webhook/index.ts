@@ -1,6 +1,6 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { processTildaLead, processTildaOrder } from "../../lib/tildaWebhookHandler.ts";
+import { processTildaLead, processTildaOrder } from "./handler.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",

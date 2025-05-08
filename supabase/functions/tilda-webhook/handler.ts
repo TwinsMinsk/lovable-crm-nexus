@@ -1,6 +1,4 @@
 
-// This file imports the handlers from the main application code
-// and re-exports them to be used by the edge function
 import { supabase } from "./supabaseClient.ts";
 
 /**
@@ -30,7 +28,7 @@ export interface TildaOrderPayload {
   [key: string]: any;     // Для дополнительных полей
 }
 
-export interface TildaProduct {
+interface TildaProduct {
   name?: string;          // Название товара
   quantity?: string | number; // Количество
   amount?: string | number;   // Цена товара
@@ -108,7 +106,7 @@ export async function processTildaLead(payload: TildaLeadPayload) {
       source: `Tilda Form: ${payload.formname || payload.formid || 'Unknown'}`,
       status: "Новый",
       comment: payload.comment || null,
-      user_id: process.env.SUPABASE_SERVICE_ROLE_ID || "00000000-0000-0000-0000-000000000000" // Дефолтный ID для системных записей
+      user_id: Deno.env.get("SUPABASE_SERVICE_ROLE_ID") || "00000000-0000-0000-0000-000000000000" // Дефолтный ID для системных записей
     };
 
     // Сохранение в базу данных
@@ -120,6 +118,22 @@ export async function processTildaLead(payload: TildaLeadPayload) {
     }
 
     console.log("Лид успешно сохранен:", data);
+    
+    // Создаем уведомление о новом лиде
+    try {
+      if (data) {
+        await supabase.from("notifications").insert({
+          user_id: leadData.user_id,
+          message: `Новый лид из Tilda: ${leadData.name}`,
+          related_table: "leads",
+          related_id: data[0].id
+        });
+      }
+    } catch (notifError) {
+      console.error("Ошибка при создании уведомления:", notifError);
+      // Не прерываем выполнение, если не удалось создать уведомление
+    }
+
     return { success: true, data };
   } catch (error) {
     console.error("Ошибка при обработке лида из Tilda:", error);
@@ -166,7 +180,7 @@ export async function processTildaOrder(payload: TildaOrderPayload) {
         name: payload.name || "Клиент из Tilda",
         phones: payload.phone ? [{ value: payload.phone, type: "primary" }] : [],
         emails: payload.email ? [{ value: payload.email, type: "primary" }] : [],
-        user_id: process.env.SUPABASE_SERVICE_ROLE_ID || "00000000-0000-0000-0000-000000000000"
+        user_id: Deno.env.get("SUPABASE_SERVICE_ROLE_ID") || "00000000-0000-0000-0000-000000000000"
       };
 
       const { data: contactData, error: createError } = await supabase
@@ -240,7 +254,7 @@ export async function processTildaOrder(payload: TildaOrderPayload) {
       items: orderItems,
       payment_status: payload.payment === "paid" ? "Оплачен" : "Не оплачен",
       notes: `Заказ из Tilda ${payload.orderid}`,
-      user_id: process.env.SUPABASE_SERVICE_ROLE_ID || "00000000-0000-0000-0000-000000000000"
+      user_id: Deno.env.get("SUPABASE_SERVICE_ROLE_ID") || "00000000-0000-0000-0000-000000000000"
     };
 
     // Проверка существующего заказа по номеру
@@ -285,12 +299,14 @@ export async function processTildaOrder(payload: TildaOrderPayload) {
     
     // Создаем уведомление о новом заказе
     try {
-      await supabase.from("notifications").insert({
-        user_id: process.env.SUPABASE_SERVICE_ROLE_ID || "00000000-0000-0000-0000-000000000000",
-        message: `Новый заказ #${payload.orderid} из Tilda`,
-        related_table: "orders",
-        related_id: result.data[0].id
-      });
+      if (result.data && result.data.length > 0) {
+        await supabase.from("notifications").insert({
+          user_id: orderData.user_id,
+          message: `Новый заказ #${payload.orderid} из Tilda`,
+          related_table: "orders",
+          related_id: result.data[0].id
+        });
+      }
     } catch (notifError) {
       console.error("Ошибка при создании уведомления:", notifError);
       // Не прерываем выполнение, если не удалось создать уведомление

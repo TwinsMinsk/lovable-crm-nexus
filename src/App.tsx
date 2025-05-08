@@ -33,7 +33,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
 // Components
-import ProtectedRoute from "./components/ProtectedRoute";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 
 // Styles
 import "./App.css";

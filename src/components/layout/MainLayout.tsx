@@ -7,20 +7,25 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { NotificationBell } from "@/components/notifications/NotificationBell";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Outlet } from "react-router-dom";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
+
 interface MainLayoutProps {
   children?: ReactNode;
 }
-export function MainLayout({
-  children
-}: MainLayoutProps) {
-  const {
-    signOut
-  } = useAuth();
+
+export function MainLayout({ children }: MainLayoutProps) {
+  const { signOut } = useAuth();
   const isMobile = useIsMobile();
-  return <SidebarProvider defaultOpen={!isMobile}>
+  const [isSidebarOpen, setIsSidebarOpen] = useState(!isMobile);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  return (
+    <SidebarProvider defaultOpen={!isMobile}>
       <div className="min-h-screen flex w-full">
-        <AppSidebar />
+        <AppSidebar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
         <div className="flex-1 flex flex-col overflow-hidden">
           <header className="border-b h-14 flex items-center justify-between px-6 shrink-0">
             <div className="flex items-center">
@@ -40,5 +45,6 @@ export function MainLayout({
           </main>
         </div>
       </div>
-    </SidebarProvider>;
+    </SidebarProvider>
+  );
 }

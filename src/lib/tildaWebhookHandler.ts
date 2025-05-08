@@ -121,12 +121,14 @@ export async function processTildaLead(payload: TildaLeadPayload) {
 
     // Создаем уведомление о новом лиде
     try {
-      await createNotification({
-        userId: leadData.user_id,
-        message: `Новый лид из Tilda: ${leadData.name}`,
-        relatedTable: "leads",
-        relatedId: data[0].id
-      });
+      if (data && data.length > 0) {
+        await createNotification({
+          userId: leadData.user_id,
+          message: `Новый лид из Tilda: ${leadData.name}`,
+          relatedTable: "leads",
+          relatedId: data[0].id
+        });
+      }
     } catch (notifError) {
       console.error("Ошибка при создании уведомления:", notifError);
       // Не прерываем выполнение, если не удалось создать уведомление
@@ -298,12 +300,14 @@ export async function processTildaOrder(payload: TildaOrderPayload) {
     
     // Создаем уведомление о новом заказе
     try {
-      await createNotification({
-        userId: orderData.user_id,
-        message: `Новый заказ #${payload.orderid} из Tilda`,
-        relatedTable: "orders",
-        relatedId: result.data[0].id
-      });
+      if (result.data && result.data.length > 0) {
+        await createNotification({
+          userId: orderData.user_id,
+          message: `Новый заказ #${payload.orderid} из Tilda`,
+          relatedTable: "orders",
+          relatedId: result.data[0].id
+        });
+      }
     } catch (notifError) {
       console.error("Ошибка при создании уведомления:", notifError);
       // Не прерываем выполнение, если не удалось создать уведомление
