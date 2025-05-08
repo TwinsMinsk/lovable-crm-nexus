@@ -1,12 +1,12 @@
 
-import { supabase } from "./supabaseClient";
-import { v4 as uuidv4 } from "uuid";
-import { createNotification } from "@/utils/notificationHelpers";
+// This file imports the handlers from the main application code
+// and re-exports them to be used by the edge function
+import { supabase } from "./supabaseClient.ts";
 
 /**
  * Интерфейс для входящих данных лида из Tilda
  */
-interface TildaLeadPayload {
+export interface TildaLeadPayload {
   name?: string;
   phone?: string;
   email?: string;
@@ -19,7 +19,7 @@ interface TildaLeadPayload {
 /**
  * Интерфейс для входящих данных заказа из Tilda
  */
-interface TildaOrderPayload {
+export interface TildaOrderPayload {
   orderid?: string;        // Номер заказа
   payment?: string;        // Статус оплаты
   amount?: string | number; // Сумма заказа
@@ -30,7 +30,7 @@ interface TildaOrderPayload {
   [key: string]: any;     // Для дополнительных полей
 }
 
-interface TildaProduct {
+export interface TildaProduct {
   name?: string;          // Название товара
   quantity?: string | number; // Количество
   amount?: string | number;   // Цена товара
@@ -117,19 +117,6 @@ export async function processTildaLead(payload: TildaLeadPayload) {
     if (error) {
       console.error("Ошибка при сохранении лида:", error);
       throw error;
-    }
-
-    // Создаем уведомление о новом лиде
-    try {
-      await createNotification({
-        userId: leadData.user_id,
-        message: `Новый лид из Tilda: ${leadData.name}`,
-        relatedTable: "leads",
-        relatedId: data[0].id
-      });
-    } catch (notifError) {
-      console.error("Ошибка при создании уведомления:", notifError);
-      // Не прерываем выполнение, если не удалось создать уведомление
     }
 
     console.log("Лид успешно сохранен:", data);
@@ -298,11 +285,11 @@ export async function processTildaOrder(payload: TildaOrderPayload) {
     
     // Создаем уведомление о новом заказе
     try {
-      await createNotification({
-        userId: orderData.user_id,
+      await supabase.from("notifications").insert({
+        user_id: process.env.SUPABASE_SERVICE_ROLE_ID || "00000000-0000-0000-0000-000000000000",
         message: `Новый заказ #${payload.orderid} из Tilda`,
-        relatedTable: "orders",
-        relatedId: result.data[0].id
+        related_table: "orders",
+        related_id: result.data[0].id
       });
     } catch (notifError) {
       console.error("Ошибка при создании уведомления:", notifError);
