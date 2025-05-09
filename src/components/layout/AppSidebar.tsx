@@ -22,7 +22,7 @@ export function AppSidebar({ isSidebarOpen, toggleSidebar }: SidebarProps) {
     <div
       className={cn(
         "fixed left-0 top-0 z-30 flex h-screen w-64 flex-col border-r bg-background transition-transform",
-        isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
+        isMobile ? (isSidebarOpen ? "translate-x-0" : "-translate-x-full") : (isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"),
         !isMobile && !isSidebarOpen && "lg:w-16"
       )}
     >
