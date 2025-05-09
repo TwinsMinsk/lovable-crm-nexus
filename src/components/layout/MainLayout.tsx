@@ -18,7 +18,7 @@ export function MainLayout({ children }: MainLayoutProps) {
     <SidebarProvider defaultOpen={!isMobile}>
       <div className="min-h-screen flex w-full">
         <AppSidebar />
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col overflow-hidden pl-0 lg:pl-64 transition-all duration-300">
           <Header isMobile={isMobile} />
           <MainContent>{children}</MainContent>
         </div>
