@@ -2,27 +2,24 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { PanelLeft, PanelRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useSidebar } from "@/components/ui/sidebar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { NavSection } from "./navigation/NavSection";
 import { IntegrationsSection } from "./navigation/IntegrationsSection";
 import { LogoutButton } from "./navigation/LogoutButton";
+import { useIsMobile } from "@/hooks/use-mobile";
 
-interface SidebarProps {
-  isSidebarOpen: boolean;
-  toggleSidebar: () => void;
-}
-
-export function AppSidebar({ isSidebarOpen, toggleSidebar }: SidebarProps) {
+export function AppSidebar() {
+  const { open: isSidebarOpen } = useSidebar();
   const isMobile = useIsMobile();
   
   return (
     <div
       className={cn(
         "fixed left-0 top-0 z-30 flex h-screen w-64 flex-col border-r bg-background transition-transform",
-        isMobile ? (isSidebarOpen ? "translate-x-0" : "-translate-x-full") : (isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"),
+        isMobile ? 
+          (isSidebarOpen ? "translate-x-0" : "-translate-x-full") : 
+          (isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"),
         !isMobile && !isSidebarOpen && "lg:w-16"
       )}
     >
@@ -37,32 +34,6 @@ export function AppSidebar({ isSidebarOpen, toggleSidebar }: SidebarProps) {
         >
           {isMobile || isSidebarOpen ? "CRM-система" : "CRM"}
         </Link>
-        
-        {/* Mobile sidebar toggle */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="ml-auto lg:hidden"
-          onClick={toggleSidebar}
-        >
-          <PanelRight className="h-4 w-4" />
-        </Button>
-        
-        {/* Desktop sidebar toggle */}
-        {!isMobile && (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="ml-auto hidden lg:flex"
-            onClick={toggleSidebar}
-          >
-            {isSidebarOpen ? (
-              <PanelLeft className="h-4 w-4" />
-            ) : (
-              <PanelRight className="h-4 w-4" />
-            )}
-          </Button>
-        )}
       </div>
       
       {/* Navigation Content */}
