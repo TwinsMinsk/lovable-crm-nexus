@@ -1,12 +1,15 @@
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLeads } from "@/hooks/useLeads";
 import { useOrders } from "@/hooks/useOrders";
 import { useTasks } from "@/hooks/useTasks";
-import { AlertTriangle, CalendarClock, ShoppingCart, UserPlus } from "lucide-react";
+import { AlertTriangle, CalendarClock, ChartBar, ShoppingCart, UserPlus } from "lucide-react";
 import { isSameDay, isPast, parseISO, format } from "date-fns";
 import { ru } from "date-fns/locale";
 import { useState, useEffect } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { SalesChart } from "@/components/analytics/SalesChart";
+import { OrdersByStatusChart } from "@/components/analytics/OrdersByStatusChart";
 
 const Dashboard = () => {
   const { data: leads, isLoading: leadsLoading } = useLeads();
@@ -16,6 +19,7 @@ const Dashboard = () => {
   const [todayLeads, setTodayLeads] = useState(0);
   const [activeOrders, setActiveOrders] = useState(0);
   const [overdueTasksCount, setOverdueTasksCount] = useState(0);
+  const [totalSales, setTotalSales] = useState(0);
   
   useEffect(() => {
     // Подсчет лидов за сегодня
@@ -33,6 +37,10 @@ const Dashboard = () => {
         order.status !== "Завершен" && order.status !== "Отменен"
       ).length;
       setActiveOrders(inProgressOrders);
+      
+      // Подсчет общих продаж
+      const total = orders.reduce((sum, order) => sum + Number(order.amount), 0);
+      setTotalSales(total);
     }
     
     // Подсчет просроченных задач
@@ -57,6 +65,7 @@ const Dashboard = () => {
   return (
     <div className="space-y-4">
       <h1 className="text-3xl font-bold">Дашборд</h1>
+      
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Карточка новых лидов */}
         <Card>
@@ -130,27 +139,56 @@ const Dashboard = () => {
           </CardContent>
         </Card>
 
-        {/* Карточка задач на сегодня */}
+        {/* Карточка с общими продажами */}
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Задачи на сегодня
+              Общие продажи
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {tasksLoading ? (
+            {ordersLoading ? (
               <Skeleton className="h-10 w-20" />
             ) : (
               <>
                 <div className="flex items-center">
-                  <CalendarClock className="mr-2 h-5 w-5 text-yellow-500" />
-                  <div className="text-3xl font-bold">{todayTasks.length}</div>
+                  <ChartBar className="mr-2 h-5 w-5 text-purple-500" />
+                  <div className="text-3xl font-bold">
+                    {totalSales.toLocaleString()} ₽
+                  </div>
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">
                   {format(new Date(), 'd MMMM yyyy', {locale: ru})}
                 </p>
               </>
             )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Графики продаж */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Продажи по месяцам</CardTitle>
+            <CardDescription>
+              Динамика продаж в течение года
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="h-80">
+            <SalesChart />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Заказы по статусам</CardTitle>
+            <CardDescription>
+              Распределение заказов по текущим статусам
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="h-80">
+            <OrdersByStatusChart />
           </CardContent>
         </Card>
       </div>

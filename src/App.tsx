@@ -1,4 +1,3 @@
-
 import { Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -50,46 +49,48 @@ const queryClient = new QueryClient({
 
 function App() {
   return (
-    <ThemeProvider defaultTheme="light" storageKey="ui-theme">
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <MainLayout />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<Dashboard />} />
-              <Route path="leads" element={<Leads />} />
-              <Route path="leads/:id" element={<LeadDetail />} />
-              <Route path="contacts" element={<Contacts />} />
-              <Route path="contacts/:id" element={<ContactDetail />} />
-              <Route path="orders" element={<Orders />} />
-              <Route path="orders/:id" element={<OrderDetail />} />
-              <Route path="partners" element={<Partners />} />
-              <Route path="partners/:id" element={<PartnerDetail />} />
-              <Route path="suppliers" element={<Suppliers />} />
-              <Route path="suppliers/:id" element={<SupplierDetail />} />
-              <Route path="tasks" element={<Tasks />} />
-              <Route path="tasks/:id" element={<TaskDetail />} />
-              <Route path="calendar" element={<Calendar />} />
-              <Route path="reports" element={<Reports />} />
-              <Route path="products" element={<Products />} />
-              <Route path="products/:id" element={<ProductDetail />} />
-              <Route path="integrations/tilda" element={<TildaIntegration />} />
-            </Route>
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <Toaster position="top-right" richColors />
-        </AuthProvider>
-      </QueryClientProvider>
-    </ThemeProvider>
+    <>
+      <ThemeProvider defaultTheme="light" storageKey="ui-theme">
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <MainLayout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<Dashboard />} />
+                <Route path="leads" element={<Leads />} />
+                <Route path="leads/:id" element={<LeadDetail />} />
+                <Route path="contacts" element={<Contacts />} />
+                <Route path="contacts/:id" element={<ContactDetail />} />
+                <Route path="orders" element={<Orders />} />
+                <Route path="orders/:id" element={<OrderDetail />} />
+                <Route path="partners" element={<Partners />} />
+                <Route path="partners/:id" element={<PartnerDetail />} />
+                <Route path="suppliers" element={<Suppliers />} />
+                <Route path="suppliers/:id" element={<SupplierDetail />} />
+                <Route path="tasks" element={<Tasks />} />
+                <Route path="tasks/:id" element={<TaskDetail />} />
+                <Route path="calendar" element={<Calendar />} />
+                <Route path="reports" element={<Reports />} />
+                <Route path="products" element={<Products />} />
+                <Route path="products/:id" element={<ProductDetail />} />
+                <Route path="integrations/tilda" element={<TildaIntegration />} />
+              </Route>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            <Toaster position="top-right" richColors />
+          </AuthProvider>
+        </QueryClientProvider>
+      </ThemeProvider>
+    </>
   );
 }
 
